@@ -18,14 +18,16 @@ itemList = response.json();
 itemBank =[[0 for x in range(3)] for y in range(len(itemList['data']))];
 numberOfItemsInBank =0;
 print("item list length%n",len(itemList['data']));
+
 def generateItemBank():
     global numberOfItemsInBank;
     index = 0;
     for key in itemList['data']:
         try:
             #print(itemList['data'][key]['name']);
+            #skips items that cannot be purchased, 0gold items
             if(itemList['data'][key]['gold']['purchasable'] == True and
-            itemList['data'][key]['gold']['total']!= 0):  #skips items that cannot be purchased, 0gold items
+            itemList['data'][key]['gold']['total']!= 0):  
                 itemBank[index][0]= itemList['data'][key]['id'];
                 itemBank[index][1]= itemList['data'][key]['name'];
                 itemBank[index][2]= itemList['data'][key]['gold']['total'];
@@ -34,6 +36,9 @@ def generateItemBank():
         except KeyError:   #riot has some id items without names or cost...
             print("oophsy doopsy no name here");   
     return 1;
+
+
+##exhange two items  
 def swapItem(x,y):
     tempcode= x[0];
     tempode = x[1];
@@ -45,12 +50,13 @@ def swapItem(x,y):
     y[1]=tempode;
     y[2]=tempgold;
    #sort item bank according to Item 
+
+#used to sort item bank
 def quickSortItems(bank,lo,hi):
     if(lo < hi):
         p = partitionItems(bank,lo,hi);
         quickSortItems(bank,lo,p-1);
         quickSortItems(bank,p+1,hi);
-        
 def partitionItems(bank, lo, hi):
     pivot = bank[hi][2];
     i = lo; #swap point
@@ -60,9 +66,15 @@ def partitionItems(bank, lo, hi):
             i= i+1;
     swapItem(bank[i],bank[hi])
     return i;
-   
-# 6 slots meant to contain id of item indexed from 0 to 5
-#remG = remaining Gold
+    
+    
+# The build object is a single instance of a feasible build which a champion 
+#might be wearing.  There are 6 slots for the items slots,
+#the RemG variable is used to identify the remaining gold that a champion
+#would have if they were wearing the items identified in slot.
+#Remg is dependent on the permutation group(the amount of money started with)
+#Remg= (money to spend)- (money spent on items)
+#open= the number of available slots
 class possibleBuild(object):
     def __init__(self,i1,i2,i3,i4,i5,i6,remG):
         self.open=0;
@@ -75,6 +87,9 @@ class possibleBuild(object):
         self.slot[5]=i6;
         self.remG = remG;
         self.calcSlotsOpen();
+    
+    #sort the build in descending value based on slot
+    #the most expensive item will be slot 0
     def reposition(self):
         #print(self.slot[0][2] < self.slot[1][2]);'''
         for i in range(0,6-self.open):
@@ -85,7 +100,8 @@ class possibleBuild(object):
                     self.slot[i]=temp;
 #'''                    
         return self;
-        ##construct a new build by adding a new item
+        
+    ##construct a new build by adding a new item
     def newBuild(self,newItem,oldBuild):
         #find open slot
         if(oldBuild.getOpenSlots()==0):
@@ -144,16 +160,27 @@ class possibleBuild(object):
         return self.remG;
     def getGold(self):
         return self.remG;
+    #string display of build contents
     def profile(self):
-        return "items:"+str(self.slot[0])+","+str(self.slot[1])+","+str(self.slot[2])+","+str(self.slot[3])+ ","+str(self.slot[4])+","+str(self.slot[5])+"remG:"+str(self.remG)+"open:"+str(self.open);
+        return ("items:"+str(self.slot[0])+","+str(self.slot[1])+","+
+            str(self.slot[2])+","+str(self.slot[3])+ ","+str(self.slot[4])+","+
+            str(self.slot[5])+"remG:"+str(self.remG)+"open:"+str(self.open));
     def getOpenSlots(self):
         return self.open;
         
 
 
     
-#TODO dynamic programming algorithm
- 
+"""
+DeterminePossibleBuilds is a dynamic programming algorithm which generates 
+all possible builds given a specific amount of money. 
+
+ It does this by 
+dynamically constructing an array 's' of permutations
+s[i] contains all possible permutations for (i*10) gold  (*10 for saving time)
+permutations are arrays of possibleBuildObjects
+
+"""
 s=[]; #item combos with i *10 gold
 def determinePossibleBuilds(gold):
     global s;
@@ -167,13 +194,17 @@ def determinePossibleBuilds(gold):
         currentGold  = permIndex*10;
         for newItem in canAfford(currentGold):
             #newItems gold
-            remainingGold = currentGold-newItem.getSlot(0)[2];#subtract cost of item
+            #subtract cost of item
+            remainingGold = currentGold-newItem.getSlot(0)[2];
             permGroup = s[int(remainingGold/10)];
             #add builds of new item and lower s to the new s
-            s[permIndex].extend(adjoinItemToPermGroup(permGroup,newItem.getSlot(0),remainingGold));
+            s[permIndex].extend(adjoinItemToPermGroup(permGroup,
+newItem.getSlot(0),remainingGold));
             
-#given an item and a group of potential builds return an array
-# of new builds which attach the item to each build in permgroup
+"""
+takes a permutations group and adds item to each build 
+within the permutation
+"""
 adjoinedItems = [];
 adjoinedItemsSize =0;
 def adjoinItemToPermGroup(permGroup, item, remainingGold):
@@ -181,11 +212,8 @@ def adjoinItemToPermGroup(permGroup, item, remainingGold):
     global adjoinedItemsSize;
     adjoinedItems = [];
     adjoinedItemsSize=0;
-   # print("n:",n,"pg:",permGroup);
-    #if its empty
-    #if (len(permGroup) == 0):
-        #TODO FIX GOLD
-    adjoinedItems.append(possibleBuild(item,0,0,0,0,0,remainingGold)); #add just the item
+    #add just the item
+    adjoinedItems.append(possibleBuild(item,0,0,0,0,0,remainingGold));
     for key in permGroup:
         #exclude perms with all slots fileld        
         if(key.getOpenSlots()>0):
@@ -193,8 +221,12 @@ def adjoinItemToPermGroup(permGroup, item, remainingGold):
             adjoinedItemsSize= adjoinedItemsSize+1;
     return adjoinedItems;
            
-#returns array of possible items to be purchased with remaining gold           
-#affordable=[-9 for x in range(300)];      
+           
+           
+           
+"""returns array of possible items which could be purchased with a given
+amount of gold           
+"""   
 affordable=[]
 affordableSize =0;
 def canAfford(gold):
@@ -203,24 +235,33 @@ def canAfford(gold):
     index =0;
     for i in range(0, numberOfItemsInBank):
        if(itemBank[i][2]<=gold):
-           #affordable[index] = possibleBuild(itemBank[i],0,0,0,0,0,(gold - itemBank[i][2]));
            index= index+1;
-           affordable.append(possibleBuild(itemBank[i],0,0,0,0,0, (gold - itemBank[i][2])));
+           affordable.append(possibleBuild(itemBank[i],0,0,0,0,0,
+                                           (gold - itemBank[i][2])));
     global affordableSize;
     affordableSize = index;
     return affordable;
            
-generateItemBank()
-
+           
+           
+           
+           
+""""MAIN PROGRAM"""
+#make the bank of items
+generateItemBank()  
+#generate array of permutations of builds up to index 100
 determinePossibleBuilds(101);
 
-'''
-print("Permutations for 150 gold")
-for i in s[40]:
+#show permutations of 25 gold
+for i in s[25]:
     print(i.profile());
-  '''
+
+###displays number of posisble builds for 10000  
+#(768266 if all purchasable items included)
 print(len(s[100]));
+
+###displays all items which appear in permutations
 print("ITEMS TO PERMUTe");
-po = canAfford(1000)
+po = canAfford(10)
 for i in po:
     print(i.profile());
