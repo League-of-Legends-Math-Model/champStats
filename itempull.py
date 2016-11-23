@@ -16,7 +16,7 @@ url="https://global.api.pvp.net/api/lol/static-data/na/v1.2/item?itemListData=go
 response = requests.get(url);
 itemList = response.json();    
 itemBank =[[0 for x in range(3)] for y in range(len(itemList['data']))];
-numberOfItemsInBank;
+numberOfItemsInBank =0;
 print("item list length%n",len(itemList['data']));
 def generateItemBank():
     global numberOfItemsInBank;
@@ -61,21 +61,6 @@ def partitionItems(bank, lo, hi):
     swapItem(bank[i],bank[hi])
     return i;
    
-############################33333
-    ##simplified
-#####
-coins = [[0 for x in range(2)] for y in range(5)];
-coins[0][0]='a';
-coins[0][1]=2;
-coins[1][0]='b';
-coins[1][1]=3;
-coins[2][0]='c';
-coins[2][1]=2;
-coins[3][0]='d';
-coins[3][1]=5;
-coins[4][0]='e';
-coins[4][1]=4;
-
 # 6 slots meant to contain id of item indexed from 0 to 5
 #remG = remaining Gold
 class possibleBuild(object):
@@ -90,6 +75,61 @@ class possibleBuild(object):
         self.slot[5]=i6;
         self.remG = remG;
         self.calcSlotsOpen();
+    def reposition(self):
+        #print(self.slot[0][2] < self.slot[1][2]);'''
+        for i in range(0,6-self.open):
+            for j in range(i+1,6-self.open):
+                if(self.slot[j][2]>self.slot[i][2]):
+                    temp = self.slot[j];
+                    self.slot[j]=self.slot[i];
+                    self.slot[i]=temp;
+#'''                    
+        return self;
+        ##construct a new build by adding a new item
+    def newBuild(self,newItem,oldBuild):
+        #find open slot
+        if(oldBuild.getOpenSlots()==0):
+            print("Your out of room");
+        if(oldBuild.getOpenSlots()==1):
+            return possibleBuild(oldBuild.getSlot(0),
+            oldBuild.getSlot(1),
+            oldBuild.getSlot(2),
+            oldBuild.getSlot(3),
+            oldBuild.getSlot(4),
+            newItem,
+            oldBuild.getGold()).reposition();
+        if(oldBuild.getOpenSlots()==2):
+            return possibleBuild(oldBuild.getSlot(0),
+            oldBuild.getSlot(1),
+            oldBuild.getSlot(2),
+            oldBuild.getSlot(3),
+            newItem,
+            0,
+            oldBuild.getGold()).reposition();
+        if(oldBuild.getOpenSlots()==3):
+            return possibleBuild(oldBuild.getSlot(0),
+            oldBuild.getSlot(1),
+            oldBuild.getSlot(2),
+            newItem,
+            0,
+            0,
+            oldBuild.getGold()).reposition();
+        if(oldBuild.getOpenSlots()==4):
+            return possibleBuild(oldBuild.getSlot(0),
+            oldBuild.getSlot(1),
+            newItem,
+            0,
+            0,
+            0,
+            oldBuild.getGold()).reposition();
+        if(oldBuild.getOpenSlots()==5):
+            return possibleBuild(oldBuild.getSlot(0),
+            newItem,
+            0,
+            0,
+            0,
+            0,
+            oldBuild.getGold()).reposition();
     def calcSlotsOpen(self):
         self.open =0;
         for i in range(0,6):
@@ -105,62 +145,82 @@ class possibleBuild(object):
     def getGold(self):
         return self.remG;
     def profile(self):
-        return "items:"+str(self.slot[0])+"remG:"+str(self.remG)+"open:"+str(self.open);
-    def getOpenSlots():
+        return "items:"+str(self.slot[0])+","+str(self.slot[1])+","+str(self.slot[2])+","+str(self.slot[3])+ ","+str(self.slot[4])+","+str(self.slot[5])+"remG:"+str(self.remG)+"open:"+str(self.open);
+    def getOpenSlots(self):
         return self.open;
         
-def coinPermutations():
-    for permLevel in range(0,10):  #cycle through permutation groups
-        for shopIndex in coins:
-            if(shopIndex[1]<permLevel):# if coin can be afforded
-                print("ok");
-############################3333
-##simpliciation
-###################333333
 
-#rearrange shopItems according to gold
-def sortShopItems():
-    return -99;
+
     
 #TODO dynamic programming algorithm
-s=[0 for x in range(100)]; #item combos with i *10 gold
+ 
+s=[]; #item combos with i *10 gold
 def determinePossibleBuilds(gold):
-    for i in range(0,100):
-        currentPerms = [];
-        if canAfford(i):
-            print -99
-    print -99;
+    global s;
+    s=[];
+    for permIndex in range(0,gold):
+        print(permIndex);
+       # if(permIndex != 0):
+           # print(permIndex-1,":",s[permIndex-1]);
+        #for every item that cost less than permIndex*100 gold
+        s.append([]);
+        currentGold  = permIndex*10;
+        for newItem in canAfford(currentGold):
+            #newItems gold
+            remainingGold = currentGold-newItem.getSlot(0)[2];#subtract cost of item
+            permGroup = s[int(remainingGold/10)];
+            #add builds of new item and lower s to the new s
+            s[permIndex].extend(adjoinItemToPermGroup(permGroup,newItem.getSlot(0),remainingGold));
+            
+#given an item and a group of potential builds return an array
+# of new builds which attach the item to each build in permgroup
+adjoinedItems = [];
+adjoinedItemsSize =0;
+def adjoinItemToPermGroup(permGroup, item, remainingGold):
+    global adjoinedItems;
+    global adjoinedItemsSize;
+    adjoinedItems = [];
+    adjoinedItemsSize=0;
+   # print("n:",n,"pg:",permGroup);
+    #if its empty
+    #if (len(permGroup) == 0):
+        #TODO FIX GOLD
+    adjoinedItems.append(possibleBuild(item,0,0,0,0,0,remainingGold)); #add just the item
+    for key in permGroup:
+        #exclude perms with all slots fileld        
+        if(key.getOpenSlots()>0):
+            adjoinedItems.append(key.newBuild(item, key));
+            adjoinedItemsSize= adjoinedItemsSize+1;
+    return adjoinedItems;
            
 #returns array of possible items to be purchased with remaining gold           
-affordable=[-9 for x in range(300)];      
+#affordable=[-9 for x in range(300)];      
+affordable=[]
 affordableSize =0;
 def canAfford(gold):
+    global affordable;
+    affordable=[];
     index =0;
     for i in range(0, numberOfItemsInBank):
-       if(itemBank[i][2]<gold):
-           global affordable;
-           affordable[index] = possibleBuild(itemBank[i],0,0,0,0,0,(gold - itemBank[i][2]));
+       if(itemBank[i][2]<=gold):
+           #affordable[index] = possibleBuild(itemBank[i],0,0,0,0,0,(gold - itemBank[i][2]));
            index= index+1;
-           #affordable.append(possibleBuild(itemBank[i],0,0,0,0,0, (gold - itemBank[i][2])));
+           affordable.append(possibleBuild(itemBank[i],0,0,0,0,0, (gold - itemBank[i][2])));
     global affordableSize;
     affordableSize = index;
-           
+    return affordable;
            
 generateItemBank()
 
-#for i in range(0, 9223372036854775807):
- #   print(i);
+determinePossibleBuilds(101);
 
-#for i in range(0,numberOfItemsInBank):
- #   print(itemBank[i]);
-#bb = [];
-#bb.append(possibleBuild(1,2,3,4,5,6,100));
-#print(bb[0].getSlot(0));
-canAfford(4000);
-#for i in range(0, affordableSize):
- #   print(affordable[i].profile());
-#coinPermutations();
-quickSortItems(itemBank,0,numberOfItemsInBank);
-for i in range(0,numberOfItemsInBank):
-    print(itemBank[i]);
-print(numberOfItemsInBank)
+'''
+print("Permutations for 150 gold")
+for i in s[40]:
+    print(i.profile());
+  '''
+print(len(s[100]));
+print("ITEMS TO PERMUTe");
+po = canAfford(1000)
+for i in po:
+    print(i.profile());
