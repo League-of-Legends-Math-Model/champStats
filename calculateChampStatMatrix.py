@@ -24,10 +24,16 @@ def genChampionStatMatrix(build, baseStat):
 """     
         
 #Example
-itemA =[3085,"armor",300];
-xy = possibleBuild(itemA,0,0,0,0,0,100);
+        #Ruined King
+itemA =[3153,"runied king", --99];   #id only accurate on these entries
+# Infinity edge
+itemB=[3031, "infinity Edge", -99]
+xy = possibleBuild(itemA,itemB,0,0,0,0,100);
+
 
 print(xy.getSlot(0)[0]);
 print(id2StatMatrix(xy.getSlot(0)[0]));
+print(xy.getSlot(1)[0]);
+print(id2StatMatrix(xy.getSlot(1)[0]));
 
     
