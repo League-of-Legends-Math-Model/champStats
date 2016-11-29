@@ -19,6 +19,11 @@ itemBank =[[0 for x in range(3)] for y in range(len(itemList['data']))];
 numberOfItemsInBank =0;
 print("item list length%n",len(itemList['data']));
 
+
+##DO NOT DELETE THIS IS AN ALTERNATIVE THAT GENERATES ENTIRE ITEM BANK.  WILL 
+#BE USED WHEN WE EXTEND BEYOND ADC
+"""
+
 def generateItemBank():
     global numberOfItemsInBank;
     index = 0;
@@ -37,6 +42,64 @@ def generateItemBank():
             print("oophsy doopsy no name here");   
     return 1;
 
+
+###DONOT DELETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+"""
+#returns true if name matches the name of an Item we want to include
+'''
+1028 ruby crystal
+1037 pickaxe
+1038 b.f.sword
+3101 stinger
+3044 phage
+
+'''
+def isDesiredItem(id):
+    if(
+    id == 1018 or # cloak of agility
+    id == 1027 or # saphire crystal
+    id == 1028 or  #ruby crystal
+    id == 1036 or  #long sword
+    id == 1037 or    #pickaxe
+    id == 1038 or     # b.f. sword
+    id == 1042 or ##dagger
+    id == 1043 or     #recursive bow
+    id == 1051 or ## brawlers gloves
+    id == 1053 or #vampire scepter
+    id == 2015 or #kshard
+    id == 3101 or    # stinger
+    id == 3133 or  #caulefield warhammer
+    id == 3031 or #infinty edge
+    id == 3034 or   #giant slayer
+    id == 3035 or   #last whisper
+    id == 3036 or  #Lord D regards
+    id == 3044 or  #phage
+    id == 3046 or  #phantom dancer
+    id == 3057 or  ##sheen
+    id == 3072 or #the blood thirstie
+    id == 3078 or #trinty force
+    id == 3085 or #runnans hurricaine
+    id == 3086 or # recursive bow
+    id == 3094 or #rapid fire cannn
+    id == 3086 or #static shiv
+    id == 3508):#ess reav       
+        return True;
+def generateItemBank():
+    global numberOfItemsInBank;
+    index = 0;
+    for key in itemList['data']:
+        try:
+            #print(itemList['data'][key]['id']);
+            #skips items that cannot be purchased, 0gold items
+            if(isDesiredItem(itemList['data'][key]['id'])):  
+                itemBank[index][0]= itemList['data'][key]['id'];
+                itemBank[index][1]= itemList['data'][key]['name'];
+                itemBank[index][2]= itemList['data'][key]['gold']['total'];
+                index=index+1;
+                numberOfItemsInBank = index;
+        except KeyError:   #riot has some id items without names or cost...
+            print("oophsy doopsy no name here");   
+    return 1;   
 
 ##exhange two items  
 def swapItem(x,y):
@@ -250,18 +313,24 @@ def canAfford(gold):
 #make the bank of items
 generateItemBank()  
 #generate array of permutations of builds up to index 100
-determinePossibleBuilds(101);
+determinePossibleBuilds(210);
 
 #show permutations of 25 gold
-for i in s[25]:
+dispNum = 100;
+print("Permutations for",dispNum,"0");
+for i in s[dispNum]:
     print(i.profile());
 
 ###displays number of posisble builds for 10000  
 #(768266 if all purchasable items included)
-print(len(s[100]));
+print("number of permutaitons");
+print(len(s[200]));
 
 ###displays all items which appear in permutations
 print("ITEMS TO PERMUTe");
-po = canAfford(10)
+po = canAfford(3000)
 for i in po:
     print(i.profile());
+
+for i in range(0,numberOfItemsInBank):
+    print (itemBank[i]);
