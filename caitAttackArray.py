@@ -67,6 +67,7 @@ def caitAttackArray(statMatr, itemArray):
     response = requests.get(caitUrl)
     cait = response.json()
     baseStats = cait['stats']
+    spells = cait['spells']
     
     baseAD = baseStats['attackdamage'] + baseStats['attackdamageperlevel'] * (statMatr[8] - 1) * (0.685 + 0.0175 * statMatr[8])
     itemEffectBank = [
@@ -116,12 +117,14 @@ def caitAttackArray(statMatr, itemArray):
     
     for i in range(0, statMatr[8]):
         abilityPoints[caitAbSequence[i]-1] = abilityPoints[caitAbSequence[i]-1] + 1
+    #headshot and multipliers don't show up anywhere in the API
     headshot = statMatr[4] + (.5 + .5 * critDamage * statMatr[6])*statMatr[4]
     critHeadshot = headshot + statMatr[4] * (critDamage - 1)
-    trapHeadshot = headshot + 30 + (abilityPoints[1] - 1) * 40 + .7 * statMatr[4]    
+    #the .7 multiplier from trapHeadshot doesn't show up anywhere in the API
+    trapHeadshot = headshot + spells[1]['effect'][1][abilityPoints[1]] + .7 * statMatr[4]    
     trapCritHS = trapHeadshot + statMatr[4] * (critDamage - 1)
-    caliberNet = 70 + (abilityPoints[2] - 1) * 40
-    peacemaker = 30 + (abilityPoints[0] - 1) * 40 + (1.3 + .1 * (abilityPoints[0] - 1)) * statMatr[4]
+    caliberNet = spells[2]['effect'][1][abilityPoints[2]]
+    peacemaker = spells[0]['effect'][1][abilityPoints[0]]] + (spells[0]['effect'][5][abilityPoints[0]]) * statMatr[4]
     
     for i in range(0, 15):
         sequence[0][i] = 1 / statMatr[5]
