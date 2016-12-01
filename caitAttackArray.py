@@ -124,7 +124,7 @@ def caitAttackArray(statMatr, itemArray):
     trapHeadshot = headshot + spells[1]['effect'][1][abilityPoints[1]] + .7 * statMatr[4]    
     trapCritHS = trapHeadshot + statMatr[4] * (critDamage - 1)
     caliberNet = spells[2]['effect'][1][abilityPoints[2]]
-    peacemaker = spells[0]['effect'][1][abilityPoints[0]]] + (spells[0]['effect'][5][abilityPoints[0]]) * statMatr[4]
+    peacemaker = spells[0]['effect'][1][abilityPoints[0]] + (spells[0]['effect'][5][abilityPoints[0]]) * statMatr[4]
     
     for i in range(0, 15):
         sequence[0][i] = 1 / statMatr[5]
