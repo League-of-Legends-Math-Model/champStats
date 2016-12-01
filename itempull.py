@@ -225,6 +225,15 @@ class possibleBuild(object):
         return self.remG;
     def getGold(self):
         return self.remG;
+    def getItems(self):
+        x =[];
+        for i in range(0,6):
+            print("seen");
+            if(self.slot[i] != 0):
+                x.append(self.slot[i][0]);
+            else:
+                x.append(0);
+        return x;
     #string display of build contents
     def profile(self):
         return ("items:"+str(self.slot[0])+","+str(self.slot[1])+","+
@@ -316,8 +325,9 @@ def canAfford(gold):
 generateItemBank()  
 
 #generate array of permutations of builds up to index 100
-determinePossibleBuilds(410);  #2100
-print(len(s[400]));
+determinePossibleBuilds(100);  #2100
+print(len(s[9]));
+print(s[90][3].getItems());
 """
 #show permutations of 25 gold
 dispNum = 100;
