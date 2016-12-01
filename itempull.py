@@ -22,8 +22,8 @@ print("item list length%n",len(itemList['data']));
 
 ##DO NOT DELETE THIS IS AN ALTERNATIVE THAT GENERATES ENTIRE ITEM BANK.  WILL 
 #BE USED WHEN WE EXTEND BEYOND ADC
-"""
 
+"""
 def generateItemBank():
     global numberOfItemsInBank;
     index = 0;
@@ -41,10 +41,10 @@ def generateItemBank():
         except KeyError:   #riot has some id items without names or cost...
             print("oophsy doopsy no name here");   
     return 1;
-
+"""
 
 ###DONOT DELETE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-"""
+
 #returns true if name matches the name of an Item we want to include
 '''
 1028 ruby crystal
@@ -53,7 +53,9 @@ def generateItemBank():
 3101 stinger
 3044 phage
 
+
 '''
+
 def isDesiredItem(id):
     if(
     id == 1018 or # cloak of agility
@@ -69,8 +71,8 @@ def isDesiredItem(id):
     id == 2015 or #kshard
     id == 3101 or    # stinger
     id == 3133 or  #caulefield warhammer
-    id == 3031 or #infinty edge
-    id == 3034 or   #giant slayer
+    id == 3031 or #infinty edge                         todo  250% crit
+    id == 3034 or   #giant slayer                        
     id == 3035 or   #last whisper
     id == 3036 or  #Lord D regards
     id == 3044 or  #phage
@@ -312,9 +314,11 @@ def canAfford(gold):
 """"MAIN PROGRAM"""
 #make the bank of items
 generateItemBank()  
-#generate array of permutations of builds up to index 100
-determinePossibleBuilds(210);
 
+#generate array of permutations of builds up to index 100
+determinePossibleBuilds(410);  #2100
+print(len(s[400]));
+"""
 #show permutations of 25 gold
 dispNum = 100;
 print("Permutations for",dispNum,"0");
@@ -331,6 +335,9 @@ print("ITEMS TO PERMUTe");
 po = canAfford(3000)
 for i in po:
     print(i.profile());
+    '''
 
 for i in range(0,numberOfItemsInBank):
     print (itemBank[i]);
+    
+    """
