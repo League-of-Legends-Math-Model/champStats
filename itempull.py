@@ -228,7 +228,6 @@ class possibleBuild(object):
     def getItems(self):
         x =[];
         for i in range(0,6):
-            print("seen");
             if(self.slot[i] != 0):
                 x.append(self.slot[i][0]);
             else:
@@ -243,7 +242,27 @@ class possibleBuild(object):
         return self.open;
         
 
-
+s=[]; #item combos with i *10 gold
+def determinePossibleBuildsFile(ggold):
+    gold = int(ggold/10);
+    global s;
+    s=[];
+    for permIndex in range(0,gold):
+        print(permIndex);
+       # if(permIndex != 0):
+           # print(permIndex-1,":",s[permIndex-1]);
+        #for every item that cost less than permIndex*100 gold
+        s.append([]);
+        currentGold  = permIndex*10;
+        for newItem in canAfford(currentGold):
+            #newItems gold
+            #subtract cost of item
+            remainingGold = currentGold-newItem.getSlot(0)[2];
+            permGroup = s[int(remainingGold/10)];
+            #add builds of new item and lower s to the new s
+            s[permIndex].extend(adjoinItemToPermGroup(permGroup,
+newItem.getSlot(0),remainingGold));
+    return s;
     
 """
 DeterminePossibleBuilds is a dynamic programming algorithm which generates 
