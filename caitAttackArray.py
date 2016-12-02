@@ -105,7 +105,7 @@ def caitAttackArray(statMatr, itemArray):
     regOnHit = 0
     phyEnhance = 1
     
-    for i in range(0, 5):
+    for i in range(0, len(itemArray)):
         for j in range(0, 27):
             if itemArray[i] == itemEffectBank[j][0]:
                 critDamage = critDamage + itemEffectBank[j][1]
@@ -115,7 +115,7 @@ def caitAttackArray(statMatr, itemArray):
     
     abilityPoints = [0, 0, 0, 0]
     
-    for i in range(0, statMatr[8]):
+    for i in range(0, int(statMatr[8])):
         abilityPoints[caitAbSequence[i]-1] = abilityPoints[caitAbSequence[i]-1] + 1
     #headshot and multipliers don't show up anywhere in the API
     headshot = statMatr[4] + (.5 + .5 * critDamage * statMatr[6])*statMatr[4]

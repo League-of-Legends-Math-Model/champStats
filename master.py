@@ -16,9 +16,10 @@ detBuilds = determinePossibleBuilds(gold)
 cStats = caitStats(level)
 
 for i in range(0, len(detBuilds)):
-    stats = genChampStatMatrix(cStats, detBuilds[i])
+    stats = genChampionStatMatrix(cStats, detBuilds[i])
     items = detBuilds[i].getItems()
-    
+    print("st",stats);
+    print("it",items);
     seq = caitAttackArray(stats, items)
     
     dps = calcDPS(seq)

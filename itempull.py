@@ -256,7 +256,8 @@ permutations are arrays of possibleBuildObjects
 
 """
 s=[]; #item combos with i *10 gold
-def determinePossibleBuilds(gold):
+def determinePossibleBuilds(ggold):
+    gold = int(ggold/10);
     global s;
     s=[];
     for permIndex in range(0,gold):
@@ -274,6 +275,7 @@ def determinePossibleBuilds(gold):
             #add builds of new item and lower s to the new s
             s[permIndex].extend(adjoinItemToPermGroup(permGroup,
 newItem.getSlot(0),remainingGold));
+    return s[gold-1];
             
 """
 takes a permutations group and adds item to each build 
@@ -325,8 +327,9 @@ def canAfford(gold):
 generateItemBank()  
 
 #generate array of permutations of builds up to index 100
-determinePossibleBuilds(100);  #2100
-print(len(s[9]));
+#determinePossibleBuilds(1000);  #2100
+print(len(determinePossibleBuilds(1000)));
+#print("perms",len(s[9]));
 print(s[90][3].getItems());
 """
 #show permutations of 25 gold
