@@ -4,7 +4,8 @@ Created on Sun Nov 20 16:48:55 2016
 
 @author: Max
 """
-import requests
+import requests;
+import pickle;
 import json
 
 ##generates 3d array of items by traversing json data
@@ -243,11 +244,11 @@ class possibleBuild(object):
         
 
 s=[]; #item combos with i *10 gold
-def determinePossibleBuildsFile(ggold):
+def determinePossibleBuildsFile(start,ggold):
     gold = int(ggold/10);
     global s;
     s=[];
-    for permIndex in range(0,gold):
+    for permIndex in range(start,gold):
         print(permIndex);
        # if(permIndex != 0):
            # print(permIndex-1,":",s[permIndex-1]);
@@ -262,6 +263,11 @@ def determinePossibleBuildsFile(ggold):
             #add builds of new item and lower s to the new s
             s[permIndex].extend(adjoinItemToPermGroup(permGroup,
 newItem.getSlot(0),remainingGold));
+        newFile = open("permFiles/perm"+str(permIndex)+".txt", "wb");
+        p = pickle.Pickler(newFile);
+        p.dump(s[permIndex]);
+        newFile.close();
+
     return s;
     
 """
