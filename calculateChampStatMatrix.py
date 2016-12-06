@@ -31,6 +31,8 @@ def id2StatMatrix(id):
 def itemAndChamp2StatMatrix(champStatMatrix, itemStats):
         global newChampStat;
         newChampStat = deepcopy(champStatMatrix);
+       # newChampStat[ATTACK_SPEED]=newChampStat[ATTACK_SPEED_OFFSET]+newChampStat[ATTACK_SPEED]*newChampStat[ATTACK_SPEED_OFFSET];
+        #print("new as", newChampStat[ATTACK_SPEED]);        
         for itmAtr in (list(itemStats.items())):
             ##all possibilities for item boost
             if(itmAtr[0]=="FlatArmorMod"):
@@ -68,7 +70,7 @@ def itemAndChamp2StatMatrix(champStatMatrix, itemStats):
             if(itmAtr[0]=="PercentArmorMod"):
                 print(-99);  #ToDO 
             if(itmAtr[0]=="PercentAttackSpeedMod"):
-                print(-99);  #ToDO 
+                newChampStat[ATTACK_SPEED] = newChampStat[ATTACK_SPEED]+(newChampStat[ATTACK_SPEED_OFFSET]*itmAtr[1]);
             if(itmAtr[0]=="PercentCritChanceMod"):
                 print(-99);  #ToDO 
             if(itmAtr[0]=="PercentCritDamageMod"):
@@ -82,7 +84,7 @@ def itemAndChamp2StatMatrix(champStatMatrix, itemStats):
             if(itmAtr[0]=="PercentHPRegenMod"):
                 print(-99);  #ToDO 
             if(itmAtr[0]=="PercentLifeStealMod"):
-                print(-99);  #ToDO 
+                newChampStat[LIFE_STEAL] = newChampStat[LIFE_STEAL]+(itmAtr[1]);
             if(itmAtr[0]=="PercentMPPoolMod"):
                 print(-99);  #ToDO 
             if(itmAtr[0]=="PercentMPRegenMod"):
@@ -169,7 +171,9 @@ cStatMatrix=[0,0,0,0,0,0,0,0,0];
 #Attack Speed, Crit strike, Life Steal, AttackSpeed Offset, level
 def genChampionStatMatrix(baseStat, build):
     global cStatMatrix;
-    cStatMatrix = deepcopy(baseStat);
+   # cStatMatrix = deepcopy(baseStat);
+    cStatMatrix=[baseStat[0],baseStat[1],baseStat[2],baseStat[3],
+                 baseStat[4],baseStat[5],baseStat[6],baseStat[7],baseStat[9]];
     numOfItems = 6- build.getOpenSlots();
     for itemIndex in range(0,numOfItems):
         cStatMatrix = itemAndChamp2StatMatrix(cStatMatrix, id2StatMatrix(build.getSlot(itemIndex)[0]));
@@ -180,14 +184,52 @@ def genChampionStatMatrix(baseStat, build):
         #Ruined King
 #itemA =[3153,"runied king", --99];   #id only accurate on these entries
 
-itemA=[1029, "cloth armor", -99];
+
+
+"""
+   id == 1018 or # cloak of agility
+    id == 1027 or # saphire crystal
+    id == 1028 or  #ruby crystal
+    id == 1036 or  #long sword
+    id == 1037 or    #pickaxe
+    id == 1038 or     # b.f. sword
+    id == 1042 or ##dagger
+    id == 1043 or     #recursive bow
+    id == 1051 or ## brawlers gloves
+    id == 1053 or #vampire scepter
+    id == 2015 or #kshard
+    id == 3101 or    # stinger
+    id == 3133 or  #caulefield warhammer
+    id == 3031 or #infinty edge                         todo  250% crit
+    id == 3034 or   #giant slayer                        
+    id == 3035 or   #last whisper
+    id == 3036 or  #Lord D regards
+    id == 3044 or  #phage
+    id == 3046 or  #phantom dancer
+    id == 3057 or  ##sheen
+    id == 3072 or #the blood thirstie
+    id == 3078 or #trinty force
+    id == 3085 or #runnans hurricaine
+    id == 3086 or # recursive bow
+    id == 3094 or #rapid fire cannn
+    id == 3086 or #static shiv
+    id == 3508):#ess reav 
+"""
+
+
+itemA=[3508, "cloth armor", -99];
 # Infinity edge
-itemB=[3031, "infinity Edge", -99]
+itemB=[3086, "infinity Edge", -99]
 xy = possibleBuild(itemA,itemB,0,0,0,0,100);
 BaseCharacterStats = [500,5.67,22.9,30,60,.568,0,0,.568,3];
 
 print(xy.getSlot(0)[0]);
 print(id2StatMatrix(xy.getSlot(0)[0]));
+print(id2StatMatrix(xy.getSlot(1)[0]));
+print(BaseCharacterStats);
+print(genChampionStatMatrix(BaseCharacterStats,xy));
+
+'''
 print(xy.getSlot(1)[0]);
 print((id2StatMatrix(xy.getSlot(1)[0])).keys());
 print(BaseCharacterStats);
@@ -195,6 +237,6 @@ print("ok");
 print(itemAndChamp2StatMatrix(BaseCharacterStats, id2StatMatrix(xy.getSlot(0)[0])));
 print(BaseCharacterStats);
 print(genChampionStatMatrix(BaseCharacterStats,xy));
-
+'''
 
     
