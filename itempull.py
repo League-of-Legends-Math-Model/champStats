@@ -263,7 +263,7 @@ def determinePossibleBuildsFile(start,ggold):
             #add builds of new item and lower s to the new s
             s[permIndex].extend(adjoinItemToPermGroup(permGroup,
 newItem.getSlot(0),remainingGold));
-        newFile = open("permFiles/perm"+str(permIndex)+".txt", "wb");
+        newFile = open("permFiles/perm"+str(permIndex)+"0.txt", "wb");
         p = pickle.Pickler(newFile);
         p.dump(s[permIndex]);
         newFile.close();
