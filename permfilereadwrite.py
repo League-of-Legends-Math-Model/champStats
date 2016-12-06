@@ -21,7 +21,7 @@ newFile = open("permFiles/uh.txt", "wb");
 p = pickle.Pickler(newFile);
 p.dump(detBuilds);
 '''
-fh = open('permFiles/perm40.txt', 'rb');
+fh = open('permFiles/perm1000.txt', 'rb');
 up = pickle.Unpickler(fh);
 j = up.load();
 
