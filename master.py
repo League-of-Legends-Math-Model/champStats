@@ -12,7 +12,15 @@ dpsArray = [[[0, 0, 0, 0, 0, 0], 0]]
 level = 3
 gold = 1000
 
-detBuilds = determinePossibleBuilds(gold)
+fh = open('permFiles/perm1000.txt', 'rb');
+up = pickle.Unpickler(fh);
+detBuilds = up.load();
+
+
+#detBuilds = determinePossibleBuilds(gold)
+#ah = determinePossibleBuilds(400);
+#print(ah[0].profile());
+#print(detBuilds[0].profile());
 
 cStats = caitStats(level)
 
@@ -32,17 +40,19 @@ for i in range(0, len(detBuilds)):
 organize = [[0, 0]]
 
 for i in range(0, len(dpsArray)):
-    organize.append([dpsArray[i][1], i])
+    organize.append([dpsArray[i][0][1], i])
 
 organize.sort(reverse=True)
 
 print("Max DPS: " + str(organize[0][0]))
 
-items = dpsArray[organize[0][1]][0]
+items = dpsArray[organize[0][1]][0][0]
 
 for i in range(0, len(items)):
-    itemurl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/" + str(int(items[i])) + "?itemData=all&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
-    response = requests.get(itemurl)
-    buddy = response.json()
-    name = buddy['name']
+    name = "Empty"    
+    if items[i] != 0:    
+        itemurl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/" + str(int(items[i])) + "?itemData=all&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
+        response = requests.get(itemurl)
+        buddy = response.json()
+        name = buddy['name']
     print(name)
