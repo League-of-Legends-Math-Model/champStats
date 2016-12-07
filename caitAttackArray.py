@@ -96,7 +96,7 @@ def caitAttackArray(statMatr, itemArray):
     [3085, 0, 0, 15, 0],
     [3086, 0, 0, 0, 0],
     [3094, 0, rapidfirecannon[statMatr[8]], 0, 0],    
-    [3096, 0, statikkshiv[statMatr[8]], 0, 0],
+    [3087, 0, statikkshiv[statMatr[8]], 0, 0],
     [3508, 0, 0, 0, 0]
     ]
     # if infinity edge, critDamage = 2.5    
@@ -163,7 +163,7 @@ def caitAttackArray(statMatr, itemArray):
             sequence[1][10] = (critHeadshot + regOnHit)*phyEnhance
         
     # other item changes
-    
+    print(sequence)
     return sequence
 
 def calcDPS(caitSeq):
