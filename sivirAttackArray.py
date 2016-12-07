@@ -50,7 +50,7 @@ ITEM BANK
     id == 3085 or #runnans hurricaine
     id == 3086 or # recursive bow
     id == 3094 or #rapid fire cannn
-    id == 3086 or #static shiv
+    id == 3087 or #static shiv
     id == 3508    #ess reav
 """
 totalSteps = 15
@@ -93,7 +93,7 @@ def sivirAttackArray(statMatr, itemArray):
     [3085, 0, 0, 15, 0],
     [3086, 0, 0, 0, 0],
     [3094, 0, rapidfirecannon[statMatr[8]], 0, 0],    
-    [3096, 0, statikkshiv[statMatr[8]], 0, 0],
+    [3087, 0, statikkshiv[statMatr[8]], 0, 0],
     [3508, 0, 0, 0, 0]
     ]
     # if infinity edge, critDamage = 2.5    
