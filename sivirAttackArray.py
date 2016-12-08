@@ -150,7 +150,7 @@ def sivirAttackArray(statMatr, itemArray):
     print(sequence)
     return sequence
 
-def calcDPS(sivirSeq):
+def sivirCalcDPS(sivirSeq):
     time = 0
     damage = 0    
     for i in range(0, totalSteps):
