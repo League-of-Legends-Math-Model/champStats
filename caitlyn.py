@@ -36,9 +36,4 @@ def caitStats(lvl):
     endStat[8] = caitStat[0][8]
     endStat[9] = lvl
     endStat[5] = endStat[8] + endStat[8] * endStat[5]
-    print(endStat)
     return endStat
-
-charStat = caitStats(18)
-
-print(charStat)
