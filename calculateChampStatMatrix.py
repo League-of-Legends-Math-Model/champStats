@@ -223,11 +223,11 @@ itemB=[3086, "infinity Edge", -99]
 xy = possibleBuild(itemA,itemB,0,0,0,0,100);
 BaseCharacterStats = [500,5.67,22.9,30,60,.568,0,0,.568,3];
 
-print(xy.getSlot(0)[0]);
-print(id2StatMatrix(xy.getSlot(0)[0]));
-print(id2StatMatrix(xy.getSlot(1)[0]));
-print(BaseCharacterStats);
-print(genChampionStatMatrix(BaseCharacterStats,xy));
+#print(xy.getSlot(0)[0]);
+#print(id2StatMatrix(xy.getSlot(0)[0]));
+#print(id2StatMatrix(xy.getSlot(1)[0]));
+#print(BaseCharacterStats);
+#print(genChampionStatMatrix(BaseCharacterStats,xy));
 
 '''
 print(xy.getSlot(1)[0]);

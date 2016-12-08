@@ -18,7 +18,7 @@ response = requests.get(url);
 itemList = response.json();    
 itemBank =[[0 for x in range(3)] for y in range(len(itemList['data']))];
 numberOfItemsInBank =0;
-print("item list length%n",len(itemList['data']));
+#print("item list length%n",len(itemList['data']));
 
 
 ##DO NOT DELETE THIS IS AN ALTERNATIVE THAT GENERATES ENTIRE ITEM BANK.  WILL 
@@ -249,7 +249,7 @@ def determinePossibleBuildsFile(start,ggold):
     global s;
     s=[];
     for permIndex in range(start,gold):
-        print(permIndex);
+ #       print(permIndex);
        # if(permIndex != 0):
            # print(permIndex-1,":",s[permIndex-1]);
         #for every item that cost less than permIndex*100 gold
@@ -286,7 +286,7 @@ def determinePossibleBuilds(ggold):
     global s;
     s=[];
     for permIndex in range(0,gold):
-        print(permIndex);
+  #      print(permIndex);
        # if(permIndex != 0):
            # print(permIndex-1,":",s[permIndex-1]);
         #for every item that cost less than permIndex*100 gold
@@ -353,9 +353,9 @@ generateItemBank()
 
 #generate array of permutations of builds up to index 100
 #determinePossibleBuilds(1000);  #2100
-print(len(determinePossibleBuilds(1000)));
+#print(len(determinePossibleBuilds(1000)));
 #print("perms",len(s[9]));
-print(s[90][3].getItems());
+#print(s[90][3].getItems());
 """
 #show permutations of 25 gold
 dispNum = 100;
