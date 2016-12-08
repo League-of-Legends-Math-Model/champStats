@@ -65,7 +65,7 @@ def battleDamage(c1AttackArray, c2AttackArray, c1Stats, c2Stats):
     c2DamageStamps = []
     c2ResistStamps = []    
         
-    for i in range(0, len(c1AttackArray))    
+    for i in range(0, len(c1AttackArray)):    
         c1TimeStamps.append(c1AttackArray[i][0])
         c1DamageStamps.append(c1AttackArray[i][1])
         c1ResistStamps.append(c1AttackArray[i][2])  #Resistances
