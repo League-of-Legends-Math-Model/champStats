@@ -75,14 +75,14 @@ for i in range(0, len(detBuilds)):
 totalDPS = 0
 
 for i in range(0, len(dpsArray)):
-    totalDPS = totalDPS + dpsArray[i][0]
+    totalDPS = totalDPS + dpsArray[i][1]
 
 averageDPS = totalDPS / len(dpsArray)
 
 finalMetric = []
 
 for i in range(0, len(dpsArray)):
-    finalMetric.append([dpsArray[i][0], dpsArray[i][1], (dpsArray[i][1] - averageDPS)/averageDPS, dpsArray[i][2]], dpsArray[i][3])
+    finalMetric.append([dpsArray[i][0], dpsArray[i][1], (dpsArray[i][1] - averageDPS)/averageDPS, dpsArray[i][2], dpsArray[i][3]])
 
 #BEST DPS
 organizeDPS = []

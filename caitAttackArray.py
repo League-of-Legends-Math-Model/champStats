@@ -237,7 +237,6 @@ def caitAttackArray(statMatr, itemArray):
             sequence[10][1][0] = (critHeadshot + regPhyOnHit)*phyEnhance
         
     # other item changes
-    print(sequence)
     return sequence
 
 def calcDPS(caitSeq, caitAdjusted):

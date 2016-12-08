@@ -146,15 +146,15 @@ def quinnAttackArray(statMatr, itemArray):
     """
     vulnerable = 10 + 5 * statMatr[8] + (.14 + .02 * statMatr[8])*statMatr[4]
     
-    blindingAssault = spells[0]['effect'][0][abilityPoints[0] - 1] + spells[0]['effect'][3][abilityPoints[0] - 1] * statMatr[4]
+    blindingAssault = spells[0]['effect'][1][abilityPoints[0] - 1] + spells[0]['effect'][4][abilityPoints[0] - 1] * statMatr[4]
     
     heightenedSenses = 0
     if abilityPoints[1] > 0:        
-        heightenedSenses = spells[1]['effect'][1][abilityPoints[1] - 1] / 100
+        heightenedSenses = spells[1]['effect'][2][abilityPoints[1] - 1] / 100
     
     vault = 0
     if abilityPoints[2] > 0:
-        vault = spells[2]['effect'][1][abilityPoints[2] - 1] + .2 * (statMatr[4] - baseAD)
+        vault = spells[2]['effect'][2][abilityPoints[2] - 1] + .2 * (statMatr[4] - baseAD)
     
     skystrike = 0
     if abilityPoints[3] > 0:
@@ -230,5 +230,4 @@ def quinnAttackArray(statMatr, itemArray):
             sequence[i][1][0] = (statMatr[4] * critDamage + regPhyOnHit) * phyEnhance
     
     # other item changes
-    print(sequence)
     return sequence

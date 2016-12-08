@@ -36,9 +36,4 @@ def sivirStats(lvl):
     endStat[8] = sivirStat[0][8]
     endStat[9] = lvl
     endStat[5] = endStat[8] + endStat[8] * endStat[5]
-    print(endStat)
     return endStat
-
-charStat = sivirStats(18)
-
-print(charStat)

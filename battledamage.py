@@ -115,7 +115,8 @@ def battleDamage(c1AttackArray, c2AttackArray, c1Stats, c2Stats):
             # spell vamp
 
             # all damage health steal (death's dance)            
-            
+
+            timeBank1 = timeBank1 + c1TimeStamps[index1]            
             index1 = index1 + 1
             timeAt = nextMove1
             
@@ -136,10 +137,12 @@ def battleDamage(c1AttackArray, c2AttackArray, c1Stats, c2Stats):
             
             # other additions; spell vamp, all damage health steal            
             
+            timeBank2 = timeBank2 + c2TimeStamps[index2]
             index2 = index2 + 1
             timeAt = nextMove2
         
         if nextMove1 == nextMove2:
+            print("The stars have aligned.")
             damageDone = resultAttack(c1DamageStamps[index1], c1ResistStamps[index1], c1Stats, c2Stats)
             healthLoss = 0
             for i in range(0, 3):
@@ -163,6 +166,8 @@ def battleDamage(c1AttackArray, c2AttackArray, c1Stats, c2Stats):
             healthC1 = healthC1 + (c1Stats[1] / 5) * (nextMove1 - timeAt)
             healthC2 = healthC2 + (c2Stats[1] / 5) * (nextMove1 - timeAt)
             
+            timeBank1 = timeBank1 + c1TimeStamps[index1]
+            timeBank2 = timeBank2 + c2TimeStamps[index2]
             index1 = index1 + 1
             index2 = index2 + 1
             timeAt = nextMove1
