@@ -260,11 +260,11 @@ def determineAllBuilds():
             for k in range(j, numberOfItemsInBank):
                 for l in range(k, numberOfItemsInBank):
                     for m in range(l, numberOfItemsInBank):
-                        allBuilds.append(possibleBuild(itemBank[i],
-                                                       itemBank[j],
-                                                       itemBank[k],
+                        allBuilds.append(possibleBuild(itemBank[m],
                                                        itemBank[l],
-                                                       itemBank[m],0, 
+                                                       itemBank[k],
+                                                       itemBank[j],
+                                                       itemBank[i],0, 
 (itemBank[i][2]+itemBank[j][2]+itemBank[k][2]+itemBank[l][2]+itemBank[m][2])));
                         
 filteredBuilds = [];                        
@@ -288,7 +288,7 @@ def filterBuilds(gold):
 generateItemBank()  
 quickSortItems(itemBank,0,numberOfItemsInBank)
 determineAllBuilds()
-filterBuilds(7000);
+filterBuilds(14000);
 
 #print("filtered",filteredBuilds[1].profile());
 
