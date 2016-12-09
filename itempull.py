@@ -141,6 +141,7 @@ def partitionItems(bank, lo, hi):
 #Remg is dependent on the permutation group(the amount of money started with)
 #Remg= (money to spend)- (money spent on items)
 #open= the number of available slots
+"""
 class possibleBuild(object):
     def __init__(self,i1,i2,i3,i4,i5,i6,remG):
         self.open=0;
@@ -242,6 +243,9 @@ class possibleBuild(object):
     def getOpenSlots(self):
         return self.open;
         
+"""
+
+
 
 s=[]; #item combos with i *10 gold
 def determinePossibleBuildsFile(start,ggold):
