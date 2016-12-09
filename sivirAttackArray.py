@@ -135,13 +135,9 @@ def sivirAttackArray(statMatr, itemArray):
         abilityPoints[sivirAbSequence[i]-1] = abilityPoints[sivirAbSequence[i]-1] + 1
     
     onePassBlade = spells[0]['effect'][1][abilityPoints[0] - 1] + spells[0]['effect'][4][abilityPoints[0] - 1] * statMatr[4]
-    print(spells[0]['effect'][1][abilityPoints[0] - 1])
-    print(spells[0]['effect'][4][abilityPoints[0] - 1])
-    print(statMatr[4])
-    print(onePassBlade)
+
     boomerangBlade = onePassBlade + onePassBlade * (1 - spells[0]['effect'][2][abilityPoints[0] - 1] / 100)
-    print(1 - spells[0]['effect'][2][abilityPoints[0] - 1] / 100)
-    print(boomerangBlade)
+
     ricochet = 0
     
     if abilityPoints[3] > 0:
@@ -181,5 +177,4 @@ def sivirAttackArray(statMatr, itemArray):
             sequence[i][1][0] = (statMatr[4] * critDamage + regPhyOnHit) * phyEnhance
     
     # other item changes
-    print(sequence)
     return sequence
