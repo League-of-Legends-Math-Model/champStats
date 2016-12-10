@@ -221,7 +221,8 @@ def quinnAttackArray(statMatr, itemArray):
     attacks = math.floor(2 / enhancedSpeed) + 1
     
     for i in range(5, 5 + attacks):
-        sequence[i][0] = enhancedSpeed
+        if i < totalSteps:
+            sequence[i][0] = enhancedSpeed
 
     for i in range(5, totalSteps):
         critted = rng.random()

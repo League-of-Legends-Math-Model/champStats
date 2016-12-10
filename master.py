@@ -9,10 +9,10 @@ import requests
 # itempull
 
 dpsArray = []
-level = 3
-gold = 1000
+level = 16
+gold = 14000
 
-fh = open('permFiles/perm1000.txt', 'rb');
+fh = open('permFiles/buildPerm14000.txt', 'rb');
 up = pickle.Unpickler(fh);
 detBuilds = up.load();
 
@@ -28,9 +28,10 @@ cStats = caitStats(level)
 sStats = sivirStats(level)
 
 #BUILDS
-sBuild = possibleBuild([3086,"recursive bow",-99], 0, 0, 0, 0, 0, 1000) #1000 Gold
+#sBuild = possibleBuild([3086,"recursive bow",-99], 0, 0, 0, 0, 0, 1000) #1000 Gold
 #sBuild = possibleBuild([3086,"recursive bow",-99], [1042,"dagger",-99], [1051, "brawler's gloves", -99], 0, 0, 0, 2000) #2000 Gold
 #sBuild = possibleBuild([3085, "runaan's hurricane", -99], [1036, "long sword",-99], 0, 0, 0, 0, 3000) #3000 Gold
+sBuild = possibleBuild([3508, "essence reaver", -99], [3031, "infinity edge", -99], [3094, "rapid firecannon", -99], [3036, "lord dominik's regards", -99], [1038, "b.f. sword", -99], 0, 14000) #actually 13800 gold
 
 sEnhancedStats = genChampionStatMatrix(sStats, sBuild)
 sItems = sBuild.getItems()
@@ -42,10 +43,11 @@ sSeq = sivirAttackArray(sEnhancedStats, sItems)
 qStats = quinnStats(level)
 
 #BUILDS
-qBuild = possibleBuild([1037, "pickaxe", -99], 0, 0, 0, 0, 0, 1000) #1000 Gold
+#qBuild = possibleBuild([1037, "pickaxe", -99], 0, 0, 0, 0, 0, 1000) #1000 Gold
 #qBuild = possibleBuild([1037, "pickaxe", -99], [1018, "cloak of agility", -99], 0, 0, 0, 0, 2000) #2000 Gold
-#qBuild = possibleBuild(1038, [[1037, "b.f. sword", -99], "pickaxe", -99], [1018, "cloak of agility", -99], 0, 0, 0, 3000) #3000 Gold
-
+#qBuild = possibleBuild([1038, "b.f. sword", -99], [1037, "pickaxe", -99], [1018, "cloak of agility", -99], 0, 0, 0, 3000) #3000 Gold
+qBuild = possibleBuild([3031, "infinity edge", -99], [3094, "rapid firecannon", -99], [3078, "trinity force", -99], [3072, "the bloodthirster", -99], [1042, "dagger", -99], 0, 14000) #actually 13933 gold
+                        
 qEnhancedStats = genChampionStatMatrix(qStats, qBuild)
 qItems = qBuild.getItems()
 
