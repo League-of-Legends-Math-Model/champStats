@@ -58,23 +58,24 @@ qSeq = quinnAttackArray(qEnhancedStats, qItems)
 
 finalMetric = []
 
-for i in range(0, len(detBuilds)):
-    stats = genChampionStatMatrix(cStats, detBuilds[i])
+for i in range(0, len(detBuilds)):    
     items = detBuilds[i].getItems()
-    print("st",stats);
-    print("it",items);
-    seq = caitAttackArray(stats, items)
+    # filter out builds that can't work, which should save time on calculation
+    purged = purgeBuild(items)
+    if purged:    
+        stats = genChampionStatMatrix(cStats, detBuilds[i])
+        seq = caitAttackArray(stats, items)
     
-    dps = calcDPS(seq, stats)
+        dps = calcDPS(seq, stats)
 
-    sHealthMetric = battleDamage(seq, sSeq, stats, sEnhancedStats)
-    qHealthMetric = battleDamage(seq, qSeq, stats, qEnhancedStats)
+        sHealthMetric = battleDamage(seq, sSeq, stats, sEnhancedStats)
+        qHealthMetric = battleDamage(seq, qSeq, stats, qEnhancedStats)
     
     #Quinn Health Metric
     
-    temp = [detBuilds[i].getItems(), dps, sHealthMetric, qHealthMetric]
+        temp = [detBuilds[i].getItems(), dps, sHealthMetric, qHealthMetric]
     
-    dpsArray.append(temp)
+        dpsArray.append(temp)
     
 totalDPS = 0
 
