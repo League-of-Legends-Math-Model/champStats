@@ -4,6 +4,7 @@ Created on Thu Dec  1 15:09:50 2016
 
 @author: JK Rutter
 """
+import pickle;
 import json
 import requests
 # itempull
@@ -13,6 +14,7 @@ level = 16
 gold = 14000
 
 fh = open('permFiles/buildPerm14000.txt', 'rb');
+#fh = open('permFiles/perm1000.txt', 'rb');
 up = pickle.Unpickler(fh);
 detBuilds = up.load();
 

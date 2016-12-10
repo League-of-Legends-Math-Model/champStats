@@ -20,6 +20,8 @@ LEVEL=8;
 #given an item id return the item matrix
 #1029
 def id2StatMatrix(id):
+    if(id == 0):
+        id= 1052;  #FIX IN LONGTERM MODEL, THIS ACCOUNTS FOR 0 item
     url="https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/"+str(id)+"?itemData=all&api_key=444a50cf-4457-4339-8f70-2369dbd09b18";
     itemResponse = requests.get(url);
     currentItem = itemResponse.json();   
@@ -239,4 +241,5 @@ print(BaseCharacterStats);
 print(genChampionStatMatrix(BaseCharacterStats,xy));
 '''
 
-    
+#print(id2StatMatrix(1052));    
+#print(id2StatMatrix(0));
