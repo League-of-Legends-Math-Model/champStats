@@ -163,10 +163,10 @@ def caitAttackArray(statMatr, itemArray):
     headshot = statMatr[4] + (.5 + .5 * critDamage * statMatr[6])*statMatr[4]
     critHeadshot = headshot + statMatr[4] * (critDamage - 1)
     #the .7 multiplier from trapHeadshot doesn't show up anywhere in the API
-    trapHeadshot = headshot + spells[1]['effect'][1][abilityPoints[1]] + .7 * statMatr[4]    
+    trapHeadshot = headshot + spells[1]['effect'][1][abilityPoints[1]-1] + .7 * statMatr[4]    
     trapCritHS = trapHeadshot + statMatr[4] * (critDamage - 1)
-    caliberNet = spells[2]['effect'][1][abilityPoints[2]]
-    peacemaker = spells[0]['effect'][1][abilityPoints[0]] + (spells[0]['effect'][5][abilityPoints[0]]) * statMatr[4]
+    caliberNet = spells[2]['effect'][1][abilityPoints[2]-1]
+    peacemaker = spells[0]['effect'][1][abilityPoints[0]-1] + (spells[0]['effect'][5][abilityPoints[0]-1]) * statMatr[4]
     
     """
     reductions
