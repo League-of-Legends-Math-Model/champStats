@@ -65,7 +65,7 @@ def purgeBuild(itemArray):
         for i in range(0, len(mutuallyExclusive)):
             firstItem = False
             secondItem = False
-            for j in range(0, len(ItemArray)):
+            for j in range(0, len(itemArray)):
                 if itemArray[j] == mutuallyExclusive[i][0]:
                     firstItem = True
                 if itemArray[j] == mutuallyExclusive[i][1]:
