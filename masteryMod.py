@@ -40,6 +40,8 @@ Base Stats:
     29 - COOLDOWN REDUCTION
     30 - LIFESTEAL
     31 - SPELLVAMP
+    32 - ALL DAMAGE INCREASE
+    33 - ALL DAMAGE REDUCTION
 """
 #preMod = [mastery ID, stat #, base stat % increase, stack / point]
 preMod = [
@@ -50,7 +52,9 @@ preMod = [
 [6131, 30, 0, .004],
 [6131, 31, 0, .004],
 [6232, 0, 0, 10],
-[6242, 0, .5, 0]
+[6242, 0, .5, 0],
+[6222, 15, 8, 0],
+[6222, 17, 8, 0]
 ]
 
 #preLevelMod = [mastery ID, stat #, base, stack / point, points * level]
@@ -104,9 +108,56 @@ warnings = [
 [6332, "This unit passive recovers missing mana."],
 [6252, "This unit gains extra armor and magic resist based on the number of nearby enemies."],
 [6361, "This unit gains increased movement speed (40%, equivalent to a level 13 Ghost) and 75% slow resist."]
+[6242, "This unit gains triple hp regen when under 25% health."]
 ]
 
+#damageMorph = [mastery ID, auto increase, ability increase, damage reduction] all by points
 
+damageMorph = [
+[6141, 1.075, 1.075, 1],
+[6142, 1.05, 1.05, 1.025],
+[6143, 1.05, 1.05, 1],
+[6323, 1.02, 1.02, 1],
+[6263, 1, 1, .96],
+[6114, 1, 1.004, 1],
+[6331, 1.01, 1.01, 1]
+]
+
+#movement = [mastery ID, base increase, percentage increase] all by points
+
+movement = [
+[6221, 15, 1],
+[6311, 0, 1.006]
+]
+
+#AFTER FLAT MOVEMENT SPEED ITEMS, BEFORE PERCENTAGE MOVEMENT SPEED ITEMS
+def moveStats(masteryArray, baseStatArray):
+    for i in range(0, len(movement)):
+        for j in range(0, len(masteryArray)):
+            if masteryArray[j]['masteryId'] == movement[i][0]:
+                baseStatArray[19] = (baseStatArray[19] + movement[i][1]) * movement[i][2]
+    return baseStatArray
+
+#AFTER EVERYTHING
+def warningStats(masteryArray):
+    problems = []
+    for i in range(0, len(masteryArray)):
+        for j in range(0, len(warnings)):
+            if masteryArray[i]['masteryId'] == warnings[j][0]:
+                problems.append(warnings[j][1])
+    return problems
+
+#AFTER ALL ITEMS, BEFORE CALCULATION
+def damageMorphStats(masteryArray):
+    damageOutput = [1, 1, 1]
+    for i in range(0, len(masteryArray)):
+        for j in range(0, len(damageMorph)):
+            if masteryArray[i]['masteryId'] == warnings[j][0]:
+                for k in range(0, 3):
+                    damageOutput[k] = damageOutput[k] * damageMorph[j][k + 1] * masteryArray[i]['rank']
+    return damageOutput
+
+#BEFORE ITEMS
 def preModStats(masteryArray, baseStatArray):
     for i in range(0, len(masteryArray)):
         for j in range(0, len(preMod)):
@@ -114,6 +165,7 @@ def preModStats(masteryArray, baseStatArray):
                 baseStatArray[preMod[j][1]] = baseStatArray[preMod[j][1]] + baseStatArray[preMod[j][1]]*preMod[j][2] + preMod[j][3] * masteryArray[i]['rank']
     return baseStatArray
 
+#BEFORE ITEMS
 def preLevelModStats(masteryArray, baseStatArray, level):
     for i in range(0, len(masteryArray)):
         for j in range(0, len(preLevelMod)):
@@ -121,6 +173,7 @@ def preLevelModStats(masteryArray, baseStatArray, level):
                 baseStatArray[preLevelMod[j][1]] = baseStatArray[preLevelMod[j][1]] + preLevelMod[j][2] + preLevelMod[j][3] * masteryArray[i]['rank'] + preLevelMod[j][4] * masteryArray[i]['rank'] * level
     return baseStatArray
 
+#AFTER ITEMS
 def postModStats(masteryArray, baseStatArray, champBaseAtLevel):
     for i in range(0, len(masteryArray)):
         for j in range(0, len(postMod)):
@@ -128,6 +181,7 @@ def postModStats(masteryArray, baseStatArray, champBaseAtLevel):
                 baseStatArray[postMod[j][1]] = baseStatArray[postMod[j][1]] * (1 + postMod[j][2] * masteryArray[i]['rank']) + champBaseAtLevel[postMod[j][1]] * postMod[j][4] * masteryArray[i]['rank'] + (baseStatArray[postMod[j][1]] - champBaseAtLevel[postMod[j][1]]) * postMod[j][3] * masteryArray[i]['rank']
     return baseStatArray
 
+#AFTER ITEMS
 def enemyModStats(masteryArray, baseStatArray, level, enemies):
     for i in range(0, len(masteryArray)):
         for j in range(0, len(enemyMod)):
