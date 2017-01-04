@@ -3,6 +3,44 @@
 Created on Wed Dec 14 15:02:06 2016
 
 @author: JK Rutter
+
+Base Stats:
+    0 - HP
+    1 - HPPERLEVEL
+    2 - HPREGEN
+    3 - HPREGENPERLEVEL
+    4 - MP
+    5 - MPPERLEVEL
+    6 - MPREGEN
+    7 - MPREGENPERLEVEL
+    8 - ATTACKDAMAGE
+    9 - ATTACKDAMAGEPERLEVEL
+    10 - ATTACK RANGE
+    11 - CRIT
+    12 - CRITPERLEVEL
+    13 - ATTACKSPEEDOFFSET
+    14 - ATTACKSPEEDPERLEVEL
+    15 - ARMOR
+    16 - ARMORPERLEVEL
+    17 - SPELLBLOCK (mr)
+    18 - SPELLBLOCKPERLEVEL
+    19 - MOVESPEED
+-------------------------------------
+    20 - ABILITY POWER
+    21 - ABILITY POWER PER LEVEL
+    22 - LETHALITY
+    23 - ARMOR PEN
+    24 - % ARMOR PEN
+    25 - MAGIC PEN
+    26 - % MAGIC PEN
+    27 - TENACITY
+    28 - SLOW RESIST
+    29 - COOLDOWN REDUCTION
+    30 - LIFESTEAL
+    31 - SPELLVAMP
+    32 - BASE PERCENT MITIGATION
+    33 - BASE PERCENT ABILITY INCREASE
+    34 - BASE PERCENT ALL DAMAGE INCREASE
 """
 import json
 import requests
@@ -13,7 +51,7 @@ def statsFetcher(num):
     response = requests.get(champUrl)
     champ = response.json()
     baseStats = champ['stats']
-    statsArray = np.zeros(shape =(20))
+    statsArray = np.zeros(shape =(32))
     statsArray[0] = baseStats['hp']
     statsArray[1] = baseStats['hpperlevel']
     statsArray[2] = baseStats['hpregen']

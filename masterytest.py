@@ -140,11 +140,22 @@ for itmAtr in (list(itemStats.items())):
             if(itmAtr[0]=="rPercentTimeDeadModPerLevel"):
                 print(-99);
 """
-summonerID = 20250099
+
+"""
+Summoners:
+    20250099 - MonsterMashU2
+    68281280 - ursinfulnature
+    68592030 - serpentacus
+    47584599 - rainbow dashOP
+    
+"""
+summonerID = 47584599
+
+"""   MATCH HISTORY
 partUrl = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + str(summonerID) + "?api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
 response = requests.get(partUrl)
 matchlist = response.json()
-
+print(matchlist)
 
 recMatchID = matchlist['matches'][0]['matchId']
 
@@ -153,15 +164,40 @@ response = requests.get(matchUrl)
 matchdata = response.json()
 
 participants = matchdata['participantIdentities']
+"""
 
+"""   CURRENT MATCH
+"""
+
+currUrl = "https://na.api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/NA1/"+str(summonerID)+"?api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
+response = requests.get(currUrl)
+matchdata = response.json()
+
+participants = matchdata['participants']
 participantID = 0
 for i in range(0, len(participants)):
+    """ MATCH HISTORY
     if participants[i]['player']['summonerId'] == summonerID:
+        participantID = i
+    """
+    
+    """ CURRENT MATCH
+    """
+    
+    if participants[i]['summonerId'] == summonerID:
         participantID = i
 
 playerInfo = matchdata['participants'][participantID]
-mastery = playerInfo['masteries']
+championID = playerInfo['championId']
+champUrl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/"+str(championID)+"?champData=info&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
+response = requests.get(champUrl)
+allDatas = response.json()
+champName = allDatas['name']
+print("Playing: " + champName)
+print()
 
+mastery = playerInfo['masteries']
+print("Masteries:")
 for i in range(0, len(mastery)):
     mStat = mastery[i]
     points = mStat['rank']
@@ -169,7 +205,19 @@ for i in range(0, len(mastery)):
     mastUrl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/mastery/"+str(masID)+"?masteryData=all&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
     response = requests.get(mastUrl)
     allDatas = response.json()
-    
-    effect = allDatas['description'][points-1]
-    
-    print(effect)
+    name = allDatas['name']
+    descript = allDatas['description'][points-1]
+    print(name + ": " + descript)
+
+runes = playerInfo['runes']
+print()
+print("Runes:")
+for i in range(0, len(runes)):
+    rStat = runes[i]
+    number = rStat['count']
+    runeID = rStat['runeId']
+    runeUrl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/rune/"+str(runeID)+"?runeData=all&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
+    response = requests.get(runeUrl)
+    allRune = response.json()
+    descript = allRune['description']
+    print("x" + str(number)+": " + str(descript))
