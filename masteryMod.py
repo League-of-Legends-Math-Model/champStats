@@ -42,6 +42,40 @@ Base Stats:
     31 - SPELLVAMP
     32 - ALL DAMAGE INCREASE
     33 - ALL DAMAGE REDUCTION
+    
+    
+FLOW DIAGRAM
+(X) = COMPLETED
+1: BUILD CHARACTER
+2: BUILD CHARACTER TO LEVEL
+X: PREMOD
+4: FLAT RUNES
+5: LEVEL RUNES
+X: PRELEVELMOD
+7: ITEMS (AND FLAT MOVEMENT SPEED ITEMS, NOT PERCENTAGE MOVEMENT SPEED)
+X: MOVEMENT
+9: ITEMS -- PERCENTAGE MOVEMENT SPEED
+X: POSTMOD
+X: ENEMYMOD
+X: DAMAGEMORPH
+X: UNIQUES
+X: ONHITS
+X: HEALSHIELD
+X: WARNINGS
+17: CALCULATE ABILITY AND AUTO DAMAGE
+
+RETURNS
+
+X: PREMOD        | statarray
+X: PRELEVELMOD   | statarray
+X: MOVEMENT      | statarray
+X: POSTMOD       | statarray
+X: ENEMYMOD      | statarray
+X: DAMAGEMORPH   | damageoutput [all damage, ability damage, damage reduction]
+X: UNIQUES       | returnValue [summoner CDR, colossus shield, colossus CD]
+X: ONHITS        | onHitInfo 2d [[damage info], CD]
+X: HEALSHIELD    | hsEnhance (multiplier for shields/healing)
+X: WARNINGS      | problems array [list of warnings]
 """
 #preMod = [mastery ID, stat #, base stat % increase, stack / point]
 preMod = [
@@ -54,7 +88,10 @@ preMod = [
 [6232, 0, 0, 10],
 [6242, 0, .5, 0],
 [6222, 15, 8, 0],
-[6222, 17, 8, 0]
+[6222, 17, 8, 0],
+[6161, 30, .2, 0],
+[6251, 27, 0, .03],
+[6251, 28, 0, .03]
 ]
 
 #preLevelMod = [mastery ID, stat #, base, stack / point, points * level]
@@ -72,7 +109,9 @@ postMod = [
 [6151, 23, .014, 0, 0], #percent
 [6151, 24, .014, 0, 0], #percent
 [6154, 25, .014, 0, 0], #percent
-[6154, 26, .014, 0, 0]  #percent
+[6154, 26, .014, 0, 0],  #percent
+[6231, 2, .016, 0, 0],
+[6231, 30, .016, 0, 0]
 ]
 
 #enemyMod = [mastery ID, stat #, % increase, flat increase points, flat level increase, proximity matters]
@@ -85,18 +124,22 @@ enemyMod = [
 
 #onHits (extra on hit damage from masteries)
 """ON HITS
-[masteryId, damage type (0 = phy, 1 = mag, 2 = true), base, level bonus, base ad bonus, ap bonus, max health, enemy curr health, baseCD, levelmod]
+[masteryId, damage type (0 = phy, 1 = mag, 2 = true), base, level bonus, base ad bonus, ap bonus, max health, enemy curr health, baseCD, levelmod, bonus AD]
 6121 FIRST BLOOD
 6261 GRASP OF THE UNDYING
 6341 GREENFATHER'S GIFT
 6362 THUNDERLORD'S DECREE
+6162 FERVOR OF BATTLE (treated at max stacks)
+6164 DEATHFIRE TOUCH
 """
 
 onHits = [
-[6121, 2, 10, 1, 0, 0, 0, 0, 6, 0],
-[6261, 1, 0, 0, 0, 0, .03, 0, 4, 0],
-[6341, 1, 0, 0, 0, 0, 0, .03, 9, 0],
-[6362, 1, 0, 10, .3, .1, 0, 0, 25.588, .588]
+[6121, 2, 10, 1, 0, 0, 0, 0, 6, 0, 0],
+[6261, 1, 0, 0, 0, 0, .03, 0, 4, 0, 0],
+[6341, 1, 0, 0, 0, 0, 0, .03, 9, 0, 0],
+[6362, 1, 0, 10, .3, .1, 0, 0, 25.588, .588, 0],
+[6162, 0, 4.72, 3.28, 0, 0, 0, 0, 0, 0, 0],
+[6164, 1, 8, 0, 0, .25, 0, 0, 0, 0, .6]
 ]
 #warnings = [mastery ID, text]
 warnings = [
@@ -108,7 +151,8 @@ warnings = [
 [6332, "This unit passive recovers missing mana."],
 [6252, "This unit gains extra armor and magic resist based on the number of nearby enemies."],
 [6361, "This unit gains increased movement speed (40%, equivalent to a level 13 Ghost) and 75% slow resist."]
-[6242, "This unit gains triple hp regen when under 25% health."]
+[6242, "This unit gains triple hp regen when under 25% health."],
+[6363, "This unit's shields and heals are more powerful and give armor and MR."]
 ]
 
 #damageMorph = [mastery ID, auto increase, ability increase, damage reduction] all by points
@@ -129,6 +173,43 @@ movement = [
 [6221, 15, 1],
 [6311, 0, 1.006]
 ]
+
+#healShield = [mastery ID, % increase, % increase points]
+healShield = [
+[6363, 1.1, 0],
+[6231, 1, .016]
+]
+
+"""
+UNIQUES -
+6241 - INSIGHT
+6262 - COURAGE OF THE COLOSSUS
+"""
+#uniques = [mastery ID, % summoner spell cdr, base shield, level mult, max health, CD base, CDR level]
+uniques = [
+[6241, .25, 0, 0, 0, 0, 9],
+[6262, 0, 10, 10, .25, 45.88, .88]
+]
+
+#CALCULATE FOR SUMMONER SPELL CD AND PASS IN CASE OF COURAGE, AFTER EVERYTHING
+def uniqueStats(masteryArray, baseStatArray, level):
+    returnValue = [1, 0, 0]
+    for j in range(0, len(masteryArray)):
+        if masteryArray[j]['masteryId'] == 6241:
+            returnValue[0] = returnValue[0] - uniques[0][1]
+        if masteryArray[j]['masteryId'] == 6262:
+            returnValue[1] = uniques[1][2] + uniques[1][3] * level
+            returnValue[2] = uniques[1][4] - uniques[1][5] * level
+    return returnValue
+
+#CALCULATE FOR A HEALING OR A SHIELD ABILITY
+def healShieldStat(masteryArray):
+    hsEnhance = 1
+    for i in range(0, len(healShield)):
+        for j in range(0, len(masteryArray)):
+            if masteryArray[j]['masteryId'] == healShield[i][0]:
+                hsEnhance = (hsEnhance * healShield[i][1])*(1 + healShield[i][2] * masteryArray[j]['rank'])
+    return hsEnhance
 
 #AFTER FLAT MOVEMENT SPEED ITEMS, BEFORE PERCENTAGE MOVEMENT SPEED ITEMS
 def moveStats(masteryArray, baseStatArray):
@@ -189,12 +270,13 @@ def enemyModStats(masteryArray, baseStatArray, level, enemies):
                 baseStatArray[enemyMod[j][1]] = baseStatArray[enemyMod[j][1]] * (1 + enemyMod[j][2]) + enemyMod[j][3] * masteryArray[i]['rank'] * enemyMod[j][5] * enemies + enemyMod[j][4] * level * (1 - enemyMod[j][5])
     return baseStatArray            
 
+#AFTER EVERYTHING
 def masteryOnHits(masteryArray, baseStatArray, enemyStatArray, level, champBaseAtLevel):
     onHitsInfo = []
     for i in range(0, len(masteryArray)):
         for j in range(0, len(onHits)):
             if masteryArray[i]['masteryId'] == onHits[j][0]:
-                damage = onHits[j][2] + onHits[j][3] * level + onHits[j][4] * champBaseAtLevel[8] + onHits[j][5] * baseStatArray[20] + onHits[j][6] * baseStatArray[0] + onHits[j][7] * enemyStatArray[0]
+                damage = onHits[j][2] + onHits[j][3] * level + onHits[j][4] * champBaseAtLevel[8] + onHits[j][5] * baseStatArray[20] + onHits[j][6] * baseStatArray[0] + onHits[j][7] * enemyStatArray[0] + onHits[j][10] * (baseStatArray[8] - champBaseAtLevel[8])
                 damageArray = [0, 0, 0]
                 damageArray[onHits[j][1]] = damage
                 cooldown = onHits[j][8] - onHits[j][9] * level
