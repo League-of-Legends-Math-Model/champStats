@@ -49,20 +49,21 @@ FLOW DIAGRAM
 1: BUILD CHARACTER
 2: BUILD CHARACTER TO LEVEL
 X: PREMOD
-4: FLAT RUNES
-5: LEVEL RUNES
+X: FLAT RUNES
+X: LEVEL RUNES
 X: PRELEVELMOD
 7: ITEMS (AND FLAT MOVEMENT SPEED ITEMS, NOT PERCENTAGE MOVEMENT SPEED)
 X: MOVEMENT
 9: ITEMS -- PERCENTAGE MOVEMENT SPEED
 X: POSTMOD
 X: ENEMYMOD
+X: PERCENT RUNES
 X: DAMAGEMORPH
 X: UNIQUES
 X: ONHITS
 X: HEALSHIELD
 X: WARNINGS
-17: CALCULATE ABILITY AND AUTO DAMAGE
+18: CALCULATE ABILITY AND AUTO DAMAGE
 
 RETURNS
 
@@ -76,13 +77,14 @@ X: UNIQUES       | returnValue [summoner CDR, colossus shield, colossus CD]
 X: ONHITS        | onHitInfo 2d [[damage info], CD]
 X: HEALSHIELD    | hsEnhance (multiplier for shields/healing)
 X: WARNINGS      | problems array [list of warnings]
+X: RUNES (ALL)   | statarray
 """
 #preMod = [mastery ID, stat #, base stat % increase, stack / point]
 preMod = [
 [6352, 29, 0, .01],
 [6351, 22, 0, 1.7],
 [6211, 2, 0, .4],
-[6111, 14, 0, .008],
+[6111, 36, 0, .008],
 [6131, 30, 0, .004],
 [6131, 31, 0, .004],
 [6232, 0, 0, 10],

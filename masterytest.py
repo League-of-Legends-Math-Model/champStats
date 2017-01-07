@@ -147,9 +147,10 @@ Summoners:
     68281280 - ursinfulnature
     68592030 - serpentacus
     47584599 - rainbow dashOP
+    21322422 - D18 Highsmith
     
 """
-summonerID = 47584599
+summonerID = 21322422
 
 """   MATCH HISTORY
 partUrl = "https://na.api.pvp.net/api/lol/na/v2.2/matchlist/by-summoner/" + str(summonerID) + "?api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
@@ -210,6 +211,8 @@ for i in range(0, len(mastery)):
     print(name + ": " + descript)
 
 runes = playerInfo['runes']
+print()
+print(runes)
 print()
 print("Runes:")
 for i in range(0, len(runes)):
