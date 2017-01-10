@@ -193,6 +193,14 @@ uniques = [
 [6262, 0, 10, 10, .25, 45.88, .88]
 ]
 
+procStats = [
+6243, #on enemy champ hit
+6252, #based on nearby enemies
+6221, #movement speed in brush and river
+6311, #movement speed out of combat
+6222  #when near towers
+]
+
 #CALCULATE FOR SUMMONER SPELL CD AND PASS IN CASE OF COURAGE, AFTER EVERYTHING
 def uniqueStats(masteryArray, baseStatArray, level):
     returnValue = [1, 0, 0]
@@ -213,7 +221,7 @@ def healShieldStat(masteryArray):
                 hsEnhance = (hsEnhance * healShield[i][1])*(1 + healShield[i][2] * masteryArray[j]['rank'])
     return hsEnhance
 
-#AFTER FLAT MOVEMENT SPEED ITEMS, BEFORE PERCENTAGE MOVEMENT SPEED ITEMS
+#AFTER FLAT MOVEMENT SPEED ITEMS, BEFORE PERCENTAGE MOVEMENT SPEED ITEMS - SITUATIONAL
 def moveStats(masteryArray, baseStatArray):
     for i in range(0, len(movement)):
         for j in range(0, len(masteryArray)):
@@ -264,7 +272,7 @@ def postModStats(masteryArray, baseStatArray, champBaseAtLevel):
                 baseStatArray[postMod[j][1]] = baseStatArray[postMod[j][1]] * (1 + postMod[j][2] * masteryArray[i]['rank']) + champBaseAtLevel[postMod[j][1]] * postMod[j][4] * masteryArray[i]['rank'] + (baseStatArray[postMod[j][1]] - champBaseAtLevel[postMod[j][1]]) * postMod[j][3] * masteryArray[i]['rank']
     return baseStatArray
 
-#AFTER ITEMS
+#AFTER ITEMS - SITUATIONAL, NOT BASE
 def enemyModStats(masteryArray, baseStatArray, level, enemies):
     for i in range(0, len(masteryArray)):
         for j in range(0, len(enemyMod)):
