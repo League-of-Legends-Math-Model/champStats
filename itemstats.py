@@ -215,11 +215,29 @@ statis-
 item active cdr (ruby sightstone)+
 """
 
-#warningItems = [item ID, cd (if applicable), warning]
+#warningItems = [item ID, name, cd (if applicable), warning]
 warningItems = [
-[3085, 0, "This unit shoots at 3 units at a time."],
-[3083, 8, "This unit regenerates 15% of max health every 5 seconds."],
-[]
+[3085, "Runaan's Hurricane", 0, "This unit shoots at 3 units at a time."],
+[3083, "Warmog's Armor", 8, "This unit regenerates 15% of max health every 5 seconds."],
+[3082, "Warden's Mail", 0, "This unit reduces attack speed by 15%."],
+[3091, "Wit's End", 0, "This unit steals up to 25 magic resist."],
+[3090, "Wooglet's Witchcap", 90, "This unit can enter stasis for 2.5 seconds."],
+[3157, "Zhonya's Hourglass", 120, "This unit can enter stasis for 3 seconds."],
+[3110, "Frozen Heart", 0, "This unit reduces attack speed by 15%."],
+[3109, "Knight's Vow", 0, "This unit links with another unit, and gains life steal from their damage."],
+[3812, "Death's Dance", 0, "This unit bleeds 15% of damage taken over 3 seconds."],
+[3814, "Edge of Night", 45, "This unit can create a spell shield."],
+[3102, "Banshee's Veil", 40, "This unit can create a spell shield."],
+[3802, "Lost Chapter", 0, "This unit regains 20% of mana on level up."],
+[3504, "Ardent Censer", 0, "Shields or heals from this unit gives attack speed and 20 true damage life steal."],
+[3143, "Randuin's Omen", 0, "This unit reduces attack speed by 15%."],
+[3401, "Face of the Mountain", 60, "This unit can shield himself and an ally."],
+[3026, "Guardian Angel", 300, "This unit comes back with 30% of their health and mana upon death."],
+[3033, "Mortal Reminder", 0, "This unit inflicts grievous wounds."],
+[3123, "Executioner's Calling", 0, "This unit inflicts grievous wounds."],
+[3056, "Ohmwrecker", 120, "This unit can disable turrets for 3 seconds."],
+[3060, "Banner of Command", 120, "This unit can promote a minion."],
+[3165, "Morellonomicon", 0, "This unit inflicts grievous wounds."]
 ]
 
 #onHitItems = [0item ID, 1name, 2damage type, 3base, 4base AD,
@@ -350,7 +368,112 @@ lethalMoveItems = [
 [3078, "Trinity Force", 0, 0, 60, 0, 0, 0, 0],
 [3170, "Moonflair Spellblade", 0, 0, 0, 0, 0, 0, .35],
 [3111, "Mercury's Treads", 0, 0, 0, 0, 0, 0, .3],
-[3504, "Ardent Censer", 0, .08, 0, 0, 0, 0, 0]
+[3504, "Ardent Censer", 0, .08, 0, 0, 0, 0, 0],
+[3041, "Mejai's Soulstealer", 0, .1, 0, 0, 0, 0, 0]
+]
 
+#lastMultiplierItems = [item ID, name, stat, bonus mult, base mult, tot mult, ap off mana, ad off mana]
+lastMultiplierItems = [
+[3003, "Archangel's Staff", 20, 0, 0, 0, .03],
+[3007, "Archangel's Staff", 20, 0, 0, 0, .03],
+[3048, "Seraph's Embrace", 20, 0, 0, 0, .03],
+[3040, "Seraph's Embrace", 20, 0, 0, 0, .03],
+[3004, "Manamune", 8, 0, 0, 0, .02],
+[3008, "Manamune", 8, 0, 0, 0, .02],
+[3042, "Muramana", 8, 0, 0, 0, .02],
+[3043, "Muramana", 8, 0, 0, 0, .02],
+[1413, "Cinderhulk", 0, 1.15, 0, 0, 0],
+[1409, "Cinderhulk", 0, 1.15, 0, 0, 0],
+[1401, "Cinderhulk", 0, 1.15, 0, 0, 0],
+[3672, "Cinderhulk", 0, 1.15, 0, 0, 0],
+[3089, "Rabadon's Deathcap", 20, 0, 0, 1.35, 0],
+[3090, "Wooglet's Witchcap", 20, 0, 0, 1.25, 0],
+[3053, "Sterak's Gage", 8, 0, 1.25, 0, 0]
+]
+
+viktorItems = [
+[3200, "Prototype Hex Core", 1, 10],
+[3196, "Hex Core Mk-1", 3, 15],
+[3197, "Hex Core Mk-2", 6, 20],
+[3198, "Perfect Hex Core", 10, 25]
+]
+
+damageIncreaseItems = [
+[3001, 1, .1], #abyssal scepter
+[3034, 0, .1], #giant slayer
+[3036, 0, .15]  #lord dominic's regards
+]
+#statBoostItems = [item ID, name, stat, flat, percentage]
+statBoostItems = [
+[1082, "Dark Seal", 20, 30],
+[3003, "Archangel's Staff", 4, 750],
+[3007, "Archangel's Staff", 4, 750],
+[3048, "Seraph's Embrace", 4, 750],
+[3040, "Seraph's Embrace", 4, 750],
+[3004, "Manamune", 4, 750],
+[3008, "Manamune", 4, 750],
+[3042, "Muramana", 4, 750],
+[3043, "Muramana", 4, 750],
+[3151, "Liandry's Torment", 25, 15],
+[3135, "Void Staff", 26, .35],
+[3136, "Haunting Guise", 25, 15],
+[3029, "Rod of Ages", 0, 200],
+[3029, "Rod of Ages", 4, 100],
+[3029, "Rod of Ages", 20, 40],
+[3027, "Rod of Ages", 0, 200],
+[3027, "Rod of Ages", 4, 100],
+[3027, "Rod of Ages", 20, 40],
+[3124, "Guinsoo's Rageblade", 8, 18],
+[3124, "Guinsoo's Rageblade", 20, 24],
+[3124, "Guinsoo's Rageblade", 36, .48],
+[3035, "Last Whisper", 24, .3],
+[3033, "Mortal Reminder", 24, .45],
+[3031, "Infinity Edge", 35, .5],
+[3020, "Sorcerer's Shoes", 25, 15],
+[3191, "Seeker's Armguard", 20, 15],
+[3191, "Seeker's Armguard", 15, 15],
+[3052, "Jaurim's Fist", 0, 150],
+[3041, "Mejai's Soulstealer", 20, 100],
+[3181, "Sanguine Blade", 8, 30],
+[3181, "Sanguine Blade", 30, .05],
+[3046, "Phantom Dancer", 32, .12],
+[3070, "Tear of the Goddess", 4, 750],
+[3073, "Tear of the Goddess", 4, 750],
+[3072, "Bloodthirster", 30, .2],
+[3091, "Wit's End", 17, 25]
+]
+
+immolateItems = [
+[1413, "Cinderhulk", 7, 2],
+[1409, "Cinderhulk", 7, 2],
+[1401, "Cinderhulk", 7, 2],
+[3672, "Cinderhulk", 7, 2],
+[3104, "Lord Van Damm's Pillager", 25, 1],
+[3751, "Bami's Cinder", 5, 1],
+[3068, "Sunfire Cape", 25, 1]
+]
+
+armorReductionItems = [
+[3071, "The Black Cleaver", .3]
+]
+
+#recoverItems = [0item ID, 1name, 2shield/heal done increase,
+#3healing increase, all phys life steal, all life steal]
+recoverItems = [
+[3107, "Redemption", .1, 0, 0, 0],
+[3812, "Death's Dance", 0, 0, .15, 0],
+[3504, "Ardent Censer", .1, 0, 0, 0],
+[3146, "Hextech Gunblade", 0, 0, 0, .15],
+                   
+]
+
+#shieldHealItems = [item ID, name, type (0 = heal, 1 = shield), base, 
+#level, HP, bonus MR, enemy max HP]
+shieldHealItems = [
+[3107, "Redemption", 0, 130, 20, 0, 0, 0],
+[3156, "Maw of Malmortius", 1, 300, 0, 0, 1, 0],
+[3155, "Hexdrinker", 1, 100, 10, 0, 0, 0],
+[3153, "Blade of the Ruined King", 0, 0, 0, 0, 0, .1],
+[3401, "Face of the Mountain", 0, 0, .1, 0, 0],
 
 ]
