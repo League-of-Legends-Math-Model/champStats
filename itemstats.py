@@ -240,9 +240,12 @@ warningItems = [
 [3165, "Morellonomicon", 0, "This unit inflicts grievous wounds."]
 ]
 
+
+
 #onHitItems = [0item ID, 1name, 2damage type, 3base, 4base AD,
 #5bonus AD, 6total AD, 7AP, 8max health, 9enemy max health, 
 #10level bonus, CD, lethality, mana]
+
 onHitItems = [
 [1410, "Runic Echoes", 1, 60, 0, 0, 0, .1, 0, 0, 0, 0, 0, 0],
 [1414, "Runic Echoes", 1, 60, 0, 0, 0, .1, 0, 0, 0, 0, 0, 0],
@@ -279,6 +282,7 @@ onHitItems = [
 #cdrRegenItems = [item ID, hp regen, mp regen, cdr, gain HP regen = mp regen(1 = yes, 0 = no)]
 #check to see if CDR is already .05; calc bonus MP regen after the loop
 
+#these need names
 cdrRegenItems = [
 [3084, 1, 0, 0, 0],
 [1412, 0, 0, .1, 0],
@@ -341,6 +345,8 @@ cdrRegenItems = [
 
 #lethalMoveItems = [item ID, name, lethality, %movement speed increase,
 #sit. flat, sit. %, stolen movement, slow resist, tenacity]
+                    
+        
 lethalMoveItems = [
 [3086, "Zeal", 0, .05, 0, 0, 0, 0, 0],
 [3742, "Dead Man's Plate", 0, 0, 60, 0, 0, 0, 0],
@@ -477,3 +483,80 @@ shieldHealItems = [
 [3401, "Face of the Mountain", 0, 0, .1, 0, 0],
 
 ]
+
+
+"""
+METHODS BEGIN HERE
+
+Name            | Return Types
+warningData     | array of warnings
+onHitData       | [[name, damageResult, cd]]
+cdrRegenData    | baseStats
+lethalMoveData  | situational = 1: moveSpeed (number) ; situational = 0: baseStats
+
+"""
+
+def warningData(itemArray):
+    warningList = []
+    for i in range(0, len(itemArray)):
+        for j in range(0, len(warningItems)):
+            if itemArray[i] == warningItems[j][0]:
+                warningList.append(warningItems[j])
+    return warningList
+
+def onHitData(itemArray, baseStats, enBaseStats, noModStats, level):
+    onHits = []    
+    for i in range(0, len(itemArray)):
+        for j in range(0, len(onHitItems)):
+            if itemArray[i] == onHitItems[j][0]:
+                damageResult = [0, 0, 0]
+                expected = onHitItems[j][3] + onHitItems[j][4] * noModStats[8] + onHitItems[5] * (baseStats[8] - noModStats[8]) + onHitItems[6] * baseStats[8] + onHitItems[7] * baseStats[20] + onHitItems[8] * baseStats[0] + onHitItems[9] * enBaseStats[0] + onHitItems[10] * level + onHitItems[12] * baseStats[22] + onHitItems[13] * baseStats[4]
+                damageResult[onHitItems[j][2]] = expected
+                spike = [onHitItems[j][1], damageResult, onHitItems[j][11]]
+                onHits.append(spike)
+    return onHits
+
+def cdrRegenData(itemArray, baseStats, noModStats):
+    cap = .4 + baseStats[29]
+    oper = 0
+    for i in range(0, len(itemArray)):
+        for j in range(0, len(cdrRegenItems)):
+            if itemArray[i] == cdrRegenItems[j][0]:
+                if baseStats[29] < cap:
+                    baseStats[29] = baseStats[29] + cdrRegenItems[j][3]
+                    if baseStats[29] > cap:
+                        baseStats[29] = cap
+                baseStats[2] = baseStats[2] + noModStats[2] * cdrRegenItems[j][1]
+                baseStats[6] = baseStats[6] + noModStats[6] * cdrRegenItems[j][2]
+                oper = oper + cdrRegenItems[j][4]
+    if oper > 0:
+        baseStats[2] = baseStats[2] + (baseStats[6] - noModStats[6])
+    return baseStats
+
+#lethalMoveData returns a number if situational = 1, and baseStats if situational = 0
+
+def lethalMoveData(itemArray, baseStats, enBaseStats, situational):
+    moveSpeed = 0
+    if situational == 1:
+        flat = 0
+        perc = 1
+        for i in range(0, len(lethalMoveItems)):
+            for j in range(0, len(itemArray)):
+                if itemArray[j] == lethalMoveItems[i][0]:
+                    flat = flat + lethalMoveItems[i][4]
+                    perc = perc * (1 + lethalMoveItems[i][5])
+                    flat = flat + enBaseStats[19] * lethalMoveItems[i][6]
+        moveSpeed = (baseStats[19] + flat) * perc
+        return moveSpeed
+    if situational == 0:
+        perc = 1
+        for i in range(0, len(lethalMoveItems)):
+            for j in range(0, len(itemArray)):
+                if itemArray[j] == lethalMoveItems[i][0]:
+                    perc = perc * (1 + lethalMoveItems[i][3])
+                    if lethalMoveItems[i][7] > 0:
+                        baseStats[28] = lethalMoveItems[i][7]
+                    if lethalMoveItems[i][8] > baseStats[27]:
+                        baseStats[27] = lethalMoveItems[i][8]
+                    baseStats[22] = baseStats[22] + lethalMoveItems[i][2]
+        return baseStats
