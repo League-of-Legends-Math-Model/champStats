@@ -78,9 +78,35 @@ matchdata = response.json()
 participants = matchdata['participants']
 
 #looking for the chosen summoner's ability sequence history and item build
+
+teams = []
+
+for i in range(0, len(participants)):
+    sId = participants[i]['summonerId']
+    cId = participants[i]['championId']
+    tId = participants[i]['teamId']
+    nam = participants[i]['summonerName']
+    teams.append([tId, sId, cId, nam])
+
 for i in range(0, len(participants)):
     if participants[i]['summonerId'] == summonerID:
         champ = participants[i]['championId']
+        team = participants[i]['teamId']
+
+enTeam = []
+
+for i in range(0, len(teams)):
+    if team != teams[i][0]:
+        enTeam.append(teams[i])
+
+for i in range(0, len(enTeam)):
+    phrase = str(i) + ": " + enTeam[i][3]
+    print(phrase)
+
+choice = input("Choose an opponent: ")
+
+champ = enTeam[int(choice)][2]
+summonerID = enTeam[int(choice)][1]
 
 #this call doesn't count
 champUrl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/"+str(champ)+"?champData=info&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
@@ -102,6 +128,8 @@ itemList = []
 if matchlist['totalGames'] > 0:
     for i in range(0, len(matchlist['matches'])):
         matchIds.append(matchlist['matches'][i]['matchId'])
+        if i > 50:
+            break;
 
     
     for i in range(0, len(matchIds)):
@@ -225,8 +253,3 @@ if matchlist['totalGames'] > 0:
         itemLikelihood[i].append(itemstuff['name'])
     
     print(itemLikelihood)
-    
-"""
-while unfound:
-    matchUrl = "https://na.api.pvp.net/api/lol/na/v2.2/match/"+str(matchIds[i])+"?includeTimeline=TRUE&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
-"""
