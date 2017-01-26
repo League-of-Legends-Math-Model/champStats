@@ -90,6 +90,12 @@ public class summoner {
 		return count;
 	}
 	
+	private double cooldownCalc (JSONObject sp, int rk) throws JSONException {
+		double cd = sp.getJSONArray("cooldown").getDouble(rk - 1);
+		cd = cd - (cd * cooldownreduction);
+		return cd;
+	}
+	
 	// ALL DAMAGE SPELLS RETURN AN ARRAY: [PHYS, MAG, TRUE, CD]
 	// Spell Type: Phys, AD coefficient, no extra (Caitlyn Q)
 	
@@ -100,34 +106,75 @@ public class summoner {
 		
 		int rank = expectRank(inputLevel, spellNum);
 		
-		if (rank == 0){
-			rank = 1;
-		}
-		
-		double cooldown = spell.getJSONArray("cooldown").getDouble(rank);
-		cooldown = cooldown - (cooldown * cooldownreduction);
-		
+		if (rank > 0){
 		JSONArray effect = spell.getJSONArray("effect");
 		
-		double baseDamage = effect.getJSONArray(1).getDouble(rank);
-		double extraDamage = attackdamage * effect.getJSONArray(5).getDouble(rank);
+		double baseDamage = effect.getJSONArray(1).getDouble(rank - 1);
+		double extraDamage = attackdamage * effect.getJSONArray(5).getDouble(rank - 1);
 		double phys = baseDamage + extraDamage;
 		
 		expectedDamage[0] = phys;
-		expectedDamage[3] = cooldown;
-		
+		expectedDamage[3] = cooldownCalc(spell, rank);
+		}
 		return expectedDamage;
 	}
 	
 	private double[] snareAugCW(int spellNum, int inputLevel) throws JSONException {
-		double[] expectedSnare = {0, 0};
+		double[] expectedSnare = {0, 0, 0};
 		
-		double cooldown = spell.getJSONArray("cooldown").getDouble(rank);
-		cooldown = cooldown - (cooldown * cooldownreduction);
+		JSONObject spell = spells.getJSONObject(spellNum);
 		
+		int rank = expectRank(inputLevel, spellNum);
 		
+		if (rank > 0){
+		JSONArray effect = spell.getJSONArray("effect");
 		
+		double snare = effect.getJSONArray(1).getDouble(rank - 1);
+		
+		double enhancement = attackdamage * effect.getJSONArray(2).getDouble(rank - 1);
+		
+		expectedSnare[0] = snare;
+		expectedSnare[1] = enhancement;
+		expectedSnare[2] = cooldownCalc(spell, rank);
+		}
 		return expectedSnare;
+	}
+	
+	private double[] spellSlowCE (int spellNum, int inputLevel) throws JSONException {
+		double[] spellSlow = {0, 0, 0, 0, 0, 0};
+		
+		JSONObject spell = spells.getJSONObject(spellNum);
+		
+		int rank = expectRank(inputLevel, spellNum);
+		
+		if (rank > 0){
+		JSONArray effect = spell.getJSONArray("effect");
+		
+		double spelldamage = effect.getJSONArray(1).getDouble(rank - 1) + abilitypower * spell.getJSONObject("vars").getJSONArray("coeff").getDouble(0);
+		
+		spellSlow[1] = spelldamage;
+		spellSlow[3] = cooldownCalc(spell, rank);
+		spellSlow[4] = effect.getJSONArray(2).getDouble(rank - 1);
+		spellSlow[5] = effect.getJSONArray(3).getDouble(rank - 1);
+		}
+		return spellSlow;
+	}
+	
+	private double[] aceInTheHole(int spellNum, int inputLevel) throws JSONException {
+		double[] ace = {0, 0, 0, 0};
+		
+		JSONObject spell = spells.getJSONObject(spellNum);
+		
+		int rank = expectRank(inputLevel, spellNum);
+		
+		if (rank > 0) {
+			JSONArray effect = spell.getJSONArray("effect");
+			
+			double physdamage = effect.getJSONArray(1).getDouble(rank - 1) + attackdamage * spell.getJSONObject("vars").getJSONArray("coeff").getDouble(0);
+			ace[0] = physdamage;
+			ace[3] = cooldownCalc(spell, rank);
+		}
+		return ace;
 	}
 	
 	public summoner(int tId, int sId, int cId, String sn){
