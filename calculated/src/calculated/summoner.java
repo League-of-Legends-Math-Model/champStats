@@ -13,8 +13,9 @@ public class summoner {
 	int[] frequentItems;
 	JSONObject characterData;
 	JSONArray spells;
-	JSONArray masteries;
-	JSONArray runes;
+	masterySet masteries;
+	JSONArray masteryData;
+	JSONArray runeData;
 	double hp;
 	double hpperlevel;
 	double mp;
@@ -31,8 +32,15 @@ public class summoner {
 	double attackspeedoffset;
 	double attackspeedperlevel;
 	double cooldownreduction;
+	double bonusattackspeed;
+	double attackspeed;
 	double[] baseStatArray;
+	double summonerspellcd;
+	int level;
 	
+	public void createMasteries(JSONArray cm) throws JSONException {
+		masteries = new masterySet(cm);
+	}
 	
 	public void putCharacterData(JSONObject cD) throws JSONException {
 		characterData = cD;
@@ -40,13 +48,36 @@ public class summoner {
 	}
 	
 	public void putLoadout(JSONArray ma, JSONArray ru) {
-		masteries = ma;
-		runes = ru;
+		masteryData = ma;
+		runeData = ru;
+	}
+	
+	public void setLevel (int l) {
+		level = l;
+		rebuildStats();
 	}
 	
 	/* To build stats, passes:
-	 * public void putBaseStats
+	 * public void putBaseStats (done once, first time only)
+	 * private void rebuildStats (should be called after resetting level or adding an item)
+	 * 		private void growthLevel - takes base stats, brings stats up to level
+	 * 
+	 * (THEORY:)
+	 * (- FLAT STATS RUNES -> MASTERIES -> ITEMS)
+	 * (- LEVEL STATS RUNES -> MASTERIES)
+	 * (- PERCENTAGE STATS (MULTIPLICATIVE) RUNES -> MASTERIES -> ITEMS)
 	 */
+	
+	private void rebuildStats(){
+		growthLevel();
+		masteryFlat();
+		
+		// after item calculation
+		masteryPer();
+		
+		// final attack speed
+		setAttackSpeed();
+	}
 	
 	public void putBaseStats(JSONObject cS) throws JSONException {
 		JSONObject stats = cS.getJSONObject("stats");
@@ -79,6 +110,54 @@ public class summoner {
 		baseStatArray[12] = movespeed;
 	}
 	
+	// done after the per levels are updated
+	
+	private void growthLevel(){
+		double [][] statHelper = new double[6][2];
+		int row = 0;
+		int col = 0;
+		for (int i = 0; i < 12; i++){
+			statHelper[row][col] =  baseStatArray[i];
+			col++;
+			if (col == 2){
+				row++;
+				col = 0;
+			}
+		}
+		for (int i = 0; i < 6; i++){
+			statHelper[i][0] += statHelper[i][1] * (level - 1) * (0.685 + 0.0175 * level);
+		}
+		hp = statHelper[0][0];
+		mp = statHelper[1][0];
+		attackdamage = statHelper[2][0];
+		armor = statHelper[3][0];
+		spellblock = statHelper[4][0];
+		bonusattackspeed = statHelper[5][0];
+	}
+	
+	private void masteryFlat() {
+		double[] mHelper = masteries.getFlat();
+		hp += mHelper[0];
+		attackdamage += mHelper[1] + mHelper[2] * level;
+		abilitypower += mHelper[3] + mHelper[4] * level;
+	}
+	
+	private void masteryPer() {
+		double[] mHelper = masteries.getPer();
+		armor += (armor - (baseStatArray[6] + baseStatArray[7] * (level - 1) * (0.685 + 0.0175 * level))) * (1 + mHelper[0]);
+		spellblock += (spellblock - (baseStatArray[8] + baseStatArray[9] * (level - 1) * (0.685 + 0.0175 * level))) * (1 + mHelper[1]);
+		cooldownreduction += mHelper[2];
+		summonerspellcd = mHelper[3];
+		bonusattackspeed += mHelper[4];
+	}
+	
+	private void setAttackSpeed(){
+		double rawattackspeed = 0.625 / (1 - attackspeedoffset) + ((0.625 / (1 - attackspeedoffset)) * bonusattackspeed);
+		attackspeed = 1 / rawattackspeed;
+		if (attackspeed > 2.5) {
+			attackspeed = 2.5;
+		}
+	}
 	
 	private int expectRank(int inpLevel, int spellSlot){
 		int count = 0;
@@ -96,92 +175,12 @@ public class summoner {
 		return cd;
 	}
 	
-	// ALL DAMAGE SPELLS RETURN AN ARRAY: [PHYS, MAG, TRUE, CD]
-	// Spell Type: Phys, AD coefficient, no extra (Caitlyn Q)
-	
-	private double[] physAbilityCQ(int spellNum, int inputLevel) throws JSONException {
-		double[] expectedDamage = {0, 0, 0, 0};
-		
-		JSONObject spell = spells.getJSONObject(spellNum);
-		
-		int rank = expectRank(inputLevel, spellNum);
-		
-		if (rank > 0){
-		JSONArray effect = spell.getJSONArray("effect");
-		
-		double baseDamage = effect.getJSONArray(1).getDouble(rank - 1);
-		double extraDamage = attackdamage * effect.getJSONArray(5).getDouble(rank - 1);
-		double phys = baseDamage + extraDamage;
-		
-		expectedDamage[0] = phys;
-		expectedDamage[3] = cooldownCalc(spell, rank);
-		}
-		return expectedDamage;
-	}
-	
-	private double[] snareAugCW(int spellNum, int inputLevel) throws JSONException {
-		double[] expectedSnare = {0, 0, 0};
-		
-		JSONObject spell = spells.getJSONObject(spellNum);
-		
-		int rank = expectRank(inputLevel, spellNum);
-		
-		if (rank > 0){
-		JSONArray effect = spell.getJSONArray("effect");
-		
-		double snare = effect.getJSONArray(1).getDouble(rank - 1);
-		
-		double enhancement = attackdamage * effect.getJSONArray(2).getDouble(rank - 1);
-		
-		expectedSnare[0] = snare;
-		expectedSnare[1] = enhancement;
-		expectedSnare[2] = cooldownCalc(spell, rank);
-		}
-		return expectedSnare;
-	}
-	
-	private double[] spellSlowCE (int spellNum, int inputLevel) throws JSONException {
-		double[] spellSlow = {0, 0, 0, 0, 0, 0};
-		
-		JSONObject spell = spells.getJSONObject(spellNum);
-		
-		int rank = expectRank(inputLevel, spellNum);
-		
-		if (rank > 0){
-		JSONArray effect = spell.getJSONArray("effect");
-		
-		double spelldamage = effect.getJSONArray(1).getDouble(rank - 1) + abilitypower * spell.getJSONObject("vars").getJSONArray("coeff").getDouble(0);
-		
-		spellSlow[1] = spelldamage;
-		spellSlow[3] = cooldownCalc(spell, rank);
-		spellSlow[4] = effect.getJSONArray(2).getDouble(rank - 1);
-		spellSlow[5] = effect.getJSONArray(3).getDouble(rank - 1);
-		}
-		return spellSlow;
-	}
-	
-	private double[] aceInTheHole(int spellNum, int inputLevel) throws JSONException {
-		double[] ace = {0, 0, 0, 0};
-		
-		JSONObject spell = spells.getJSONObject(spellNum);
-		
-		int rank = expectRank(inputLevel, spellNum);
-		
-		if (rank > 0) {
-			JSONArray effect = spell.getJSONArray("effect");
-			
-			double physdamage = effect.getJSONArray(1).getDouble(rank - 1) + attackdamage * spell.getJSONObject("vars").getJSONArray("coeff").getDouble(0);
-			ace[0] = physdamage;
-			ace[3] = cooldownCalc(spell, rank);
-		}
-		return ace;
-	}
-	
 	public summoner(int tId, int sId, int cId, String sn){
 		teamId = tId;
 		summonerId = sId;
 		champId = cId;
 		summonerName = sn;
+		summonerspellcd = 1;
 		itemArray = new int[7];
 		abilitySequence = new int[18];
 		for (int i = 0; i < 18; i++){
