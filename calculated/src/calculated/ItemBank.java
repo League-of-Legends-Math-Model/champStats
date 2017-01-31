@@ -27,13 +27,31 @@ public class ItemBank {
 				else {
 					statMods[i][j] = 1;
 				}
+				statMods[1][6] = 0;
+				statMods[1][7] = 0;
 			}
 		}
 		for (int i = 0; i < iBuild.length; i++){
 			if (iBuild[i] > 0){
 				boolean notFound = true;
+				int j = 0;
 				while (notFound){
-					
+					if (iBuild[i] == itemBank.get(j).getId()){
+						if (!itemBank.get(j).viktor()){
+							for (int k = 0; k < 9; k++){
+								statMods[0][k] += itemBank.get(j).getFlat()[k];
+								if (k < 6){
+									statMods[1][k] = statMods[1][k] * (1 + itemBank.get(j).getPer()[k]);
+								}
+							}
+						}
+					}
+					else {
+						statMods[1][6] = itemBank.get(j).viktorPerLevel[0];
+						statMods[1][7] = itemBank.get(j).viktorPerLevel[1];
+					}
+				
+					j++;
 				}
 			}
 		}

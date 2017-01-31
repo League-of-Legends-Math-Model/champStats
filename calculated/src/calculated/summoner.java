@@ -36,9 +36,13 @@ public class summoner {
 	double bonusattackspeed;
 	double attackspeed;
 	double[] baseStatArray;
+	double[] baseScaledArray;
 	double summonerspellcd;
 	int level;
 	
+	public void placeItem(int iid, int slot){
+		itemArray[slot] = iid;
+	}
 	
 	public void putCharacterData(JSONObject cD) throws JSONException {
 		characterData = cD;
@@ -61,13 +65,37 @@ public class summoner {
 		growthLevel();
 		masteryFlat();
 		runeFlat();
-		
+		itemStats(ibank); // need ibank as a global variable
 		// after item calculation
 		runePer();
 		masteryPer();
 		
 		// final attack speed
 		setAttackSpeed();
+	}
+	
+	private void itemStats(ItemBank ib){
+		double[][] precise = ib.itemBuild(itemArray);
+		hp += precise[0][0];
+		mp += precise[0][1];
+		mp += precise[1][7] * level;
+		attackdamage += precise[0][2];
+		abilitypower += precise[0][3];
+		abilitypower += precise[1][6] * level;
+		armor += precise[0][4];
+		spellblock += precise[0][5];
+		bonusattackspeed += precise[0][6];
+		movespeed += precise[0][7];
+		cooldownreduction += precise[0][8];
+		if (cooldownreduction > .4){
+			cooldownreduction = .4;
+		}
+		hp += (hp - baseScaledArray[0]) * precise[1][0];
+		attackdamage += mp * (1 - precise[1][2]);
+		abilitypower += mp * (1 - precise[1][3]);
+		attackdamage += (1 - precise[1][5]) * baseScaledArray[2];
+		abilitypower = abilitypower * precise[1][1];
+		movespeed = movespeed * precise[1][4];
 	}
 	private void runePer() {
 		double[] modifiers = runes.getPer();
@@ -148,6 +176,13 @@ public class summoner {
 		armor = statHelper[3][0];
 		spellblock = statHelper[4][0];
 		bonusattackspeed = statHelper[5][0];
+		baseScaledArray[0] = hp;
+		baseScaledArray[1] = mp;
+		baseScaledArray[2] = attackdamage;
+		baseScaledArray[3] = armor;
+		baseScaledArray[4] = spellblock;
+		baseScaledArray[5] = bonusattackspeed;
+		
 	}
 	
 	private void masteryFlat() {
@@ -159,8 +194,8 @@ public class summoner {
 	
 	private void masteryPer() {
 		double[] mHelper = masteries.getPer();
-		armor += (armor - (baseStatArray[6] + baseStatArray[7] * (level - 1) * (0.685 + 0.0175 * level))) * (1 + mHelper[0]);
-		spellblock += (spellblock - (baseStatArray[8] + baseStatArray[9] * (level - 1) * (0.685 + 0.0175 * level))) * (1 + mHelper[1]);
+		armor += (armor - baseScaledArray[3]) * (1 + mHelper[0]);
+		spellblock += (spellblock - baseScaledArray[4]) * (1 + mHelper[1]);
 		cooldownreduction += mHelper[2];
 		summonerspellcd = mHelper[3];
 		bonusattackspeed += mHelper[4];
@@ -198,6 +233,7 @@ public class summoner {
 		summonerspellcd = 1;
 		itemArray = new int[7];
 		abilitySequence = new int[18];
+		baseScaledArray = new double[6];
 		for (int i = 0; i < 18; i++){
 			if (i < 7){
 				itemArray[i] = 0;
