@@ -128,7 +128,7 @@ itemList = []
 if matchlist['totalGames'] > 0:
     for i in range(0, len(matchlist['matches'])):
         matchIds.append(matchlist['matches'][i]['matchId'])
-        if i > 50:
+        if i > 2:
             break;
 
     
@@ -139,9 +139,9 @@ if matchlist['totalGames'] > 0:
         while uncertain:
             if (i + 1) / (10 * atNext) < 1:
                 if odd:
-                    matchUrl = "https://na.api.pvp.net/api/lol/na/v2.2/match/"+str(matchIds[i])+"?includeTimeline=TRUE&api_key=" + maxId
-                else:
                     matchUrl = "https://na.api.pvp.net/api/lol/na/v2.2/match/"+str(matchIds[i])+"?includeTimeline=TRUE&api_key=" + jmoId
+                else:
+                    matchUrl = "https://na.api.pvp.net/api/lol/na/v2.2/match/"+str(matchIds[i])+"?includeTimeline=TRUE&api_key=" + maxId
                 uncertain = False
             if odd:
                 odd = False

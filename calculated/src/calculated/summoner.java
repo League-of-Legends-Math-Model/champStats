@@ -14,6 +14,7 @@ public class summoner {
 	JSONObject characterData;
 	JSONArray spells;
 	masterySet masteries;
+	runeSet runes;
 	JSONArray masteryData;
 	JSONArray runeData;
 	double hp;
@@ -38,18 +39,17 @@ public class summoner {
 	double summonerspellcd;
 	int level;
 	
-	public void createMasteries(JSONArray cm) throws JSONException {
-		masteries = new masterySet(cm);
-	}
 	
 	public void putCharacterData(JSONObject cD) throws JSONException {
 		characterData = cD;
 		spells = characterData.getJSONArray("spells");
 	}
 	
-	public void putLoadout(JSONArray ma, JSONArray ru) {
+	public void putLoadout(JSONArray ma, JSONArray ru) throws JSONException {
 		masteryData = ma;
 		runeData = ru;
+		masteries = new masterySet(masteryData);
+		runes = new runeSet(runeData);
 	}
 	
 	public void setLevel (int l) {
@@ -57,26 +57,41 @@ public class summoner {
 		rebuildStats();
 	}
 	
-	/* To build stats, passes:
-	 * public void putBaseStats (done once, first time only)
-	 * private void rebuildStats (should be called after resetting level or adding an item)
-	 * 		private void growthLevel - takes base stats, brings stats up to level
-	 * 
-	 * (THEORY:)
-	 * (- FLAT STATS RUNES -> MASTERIES -> ITEMS)
-	 * (- LEVEL STATS RUNES -> MASTERIES)
-	 * (- PERCENTAGE STATS (MULTIPLICATIVE) RUNES -> MASTERIES -> ITEMS)
-	 */
-	
 	private void rebuildStats(){
 		growthLevel();
 		masteryFlat();
+		runeFlat();
 		
 		// after item calculation
+		runePer();
 		masteryPer();
 		
 		// final attack speed
 		setAttackSpeed();
+	}
+	private void runePer() {
+		double[] modifiers = runes.getPer();
+		hp = hp * modifiers[15];
+		bonusattackspeed += modifiers[14];
+		movespeed = movespeed * modifiers[16];
+	}
+	
+	private void runeFlat(){
+		double[] modifiers = runes.getFlat();
+		hp += modifiers[0];
+		hp += modifiers[1] * level;
+		mp += modifiers[2];
+		mp += modifiers[3] * level;
+		attackdamage += modifiers[4];
+		attackdamage += modifiers[5] * level;
+		abilitypower += modifiers[6];
+		abilitypower += modifiers[7] * level;
+		armor += modifiers[8];
+		armor += modifiers[9] * level;
+		spellblock += modifiers[10];
+		spellblock += modifiers[11] * level;
+		cooldownreduction += modifiers[12];
+		cooldownreduction += modifiers[13] * level;
 	}
 	
 	public void putBaseStats(JSONObject cS) throws JSONException {
