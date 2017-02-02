@@ -212,7 +212,7 @@ public class summoner {
 		}
 	}
 	
-	private int expectRank(int inpLevel, int spellSlot){
+	public int expectRank(int inpLevel, int spellSlot){
 		int count = 0;
 		for (int i = 0; i < inpLevel; i++){
 			if (abilitySequence[i] == spellSlot) {
