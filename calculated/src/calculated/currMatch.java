@@ -8,6 +8,8 @@ public class currMatch {
 	int summonerId;
 	int[][] playerInfo;
 	String[] playerNames;
+	JSONArray[] pMasteries;
+	JSONArray[] pRunes;
 	
 	public int[][] getPlayerInfo() {
 		return playerInfo;
@@ -35,6 +37,8 @@ public class currMatch {
 				for (int j = 0; j < 3; j++){
 					playerInfo[enPlayer][j] = everybody[i][j];
 				}
+				pMasteries[enPlayer] = players.getJSONObject(i).getJSONArray("masteries");
+				pRunes[enPlayer] = players.getJSONObject(i).getJSONArray("runes");
 				playerNames[enPlayer] = players.getJSONObject(i).getString("summonerName");
 				enPlayer++;
 			}
@@ -45,6 +49,8 @@ public class currMatch {
 		currentMatch = cM;
 		summonerId = sId;
 		playerInfo = new int[5][3];
+		pMasteries = new JSONArray[5];
+		pRunes = new JSONArray[5];
 		players = currentMatch.getJSONArray("participants");
 		populatePlayerInfo();
 	}

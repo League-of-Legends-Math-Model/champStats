@@ -15,8 +15,10 @@ public class summoner {
 	JSONArray spells;
 	masterySet masteries;
 	runeSet runes;
+	ArrayList<AbilityVar> ability;
 	JSONArray masteryData;
 	JSONArray runeData;
+	JSONArray[] effects;
 	double hp;
 	double hpperlevel;
 	double mp;
@@ -47,6 +49,7 @@ public class summoner {
 	public void putCharacterData(JSONObject cD) throws JSONException {
 		characterData = cD;
 		spells = characterData.getJSONArray("spells");
+		buildEffects();
 	}
 	
 	public void putLoadout(JSONArray ma, JSONArray ru) throws JSONException {
@@ -219,10 +222,36 @@ public class summoner {
 		return count;
 	}
 	
-	private double cooldownCalc (JSONObject sp, int rk) throws JSONException {
+	public double spCoeff(int sslot, String var){
+		double res = 0;
+		int spellVar = 0;
+		while (!ability.get(spellVar).compare(sslot,  var)){
+			spellVar++;
+		}
+		res = ability.get(spellVar).expectedResult(this);
+		return res;
+	}
+	
+	public double cooldownCalc (JSONObject sp, int rk) throws JSONException {
 		double cd = sp.getJSONArray("cooldown").getDouble(rk - 1);
 		cd = cd - (cd * cooldownreduction);
 		return cd;
+	}
+	
+	private void buildEffects() throws JSONException {
+		effects = new JSONArray[4];
+		for (int i = 0; i < 4; i++){
+			effects[i] = spells.getJSONObject(i).getJSONArray("effects");
+		}
+	}
+	
+	public double eCoeff(int sslot, int efnum) throws JSONException {
+		double res = 0;
+		int ranketh = expectRank(level, sslot);
+		if (ranketh > 0){
+			res = effects[sslot].getJSONArray(efnum).getDouble(ranketh - 1);
+		}
+		return res;
 	}
 	
 	public summoner(int tId, int sId, int cId, String sn){
@@ -234,6 +263,7 @@ public class summoner {
 		itemArray = new int[7];
 		abilitySequence = new int[18];
 		baseScaledArray = new double[6];
+		// ability = (VariableInfo).getAbilityVars(champId);
 		for (int i = 0; i < 18; i++){
 			if (i < 7){
 				itemArray[i] = 0;
