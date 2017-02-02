@@ -222,7 +222,7 @@ public class summoner {
 		return count;
 	}
 	
-	public double spCoeff(int sslot, String var){
+	public double spCoeff(int sslot, String var) throws JSONException {
 		double res = 0;
 		int spellVar = 0;
 		while (!ability.get(spellVar).compare(sslot,  var)){

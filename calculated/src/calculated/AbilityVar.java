@@ -79,16 +79,10 @@ public class AbilityVar {
 			variable = su.hp - su.baseScaledArray[0];
 			break;
 		case "effect1":
-			int erank = su.expectRank(su.level, slot);
-			if (erank > 0){
-				variable = su.effects[slot].getJSONArray(1).getDouble(erank - 1);
-			}
+			variable = su.eCoeff(slot, 1);
 			break;
 		case "e1sd":
-			int arank = su.expectRank(su.level, slot);
-			if (arank > 0){
-				variable = su.effects[slot].getJSONArray(1).getDouble(arank - 1);
-			}
+			variable = su.eCoeff(slot, 1);
 			variable += su.abilitypower * coeff;
 			variable = variable * 2;
 			break;
