@@ -12,6 +12,8 @@ public class AbilityVar {
 	String stat;
 	double base;
 	double perlevel;
+	double[] rankCoeff;
+	double inCoeff;
 	
 	public AbilityVar (int c, int s, String v, double co, String st){
 		champ = c;
@@ -19,6 +21,8 @@ public class AbilityVar {
 		var = v;
 		coeff = co;
 		stat = st;
+		rankCoeff = new double[4];
+		inCoeff = 1;
 	}
 	
 	public boolean compare(int s, String v){
@@ -81,16 +85,37 @@ public class AbilityVar {
 		case "effect1":
 			variable = su.eCoeff(slot, 1);
 			break;
+		case "effect2":
+			variable = su.eCoeff(slot, 2);
+			break;
 		case "e1sd":
-			variable = su.eCoeff(slot, 1);
-			variable += su.abilitypower * coeff;
-			variable = variable * 2;
+			variable = su.eCoeff(slot, 1) * coeff;
+			variable += su.abilitypower * inCoeff;
+			variable = variable / coeff;
+			break;
+		case "level":
+			variable = su.level;
+			break;
+		case "e1ad":
+			variable = su.eCoeff(slot, 1) * coeff;
+			variable += su.attackdamage * inCoeff;
+			variable = variable / coeff;
 			break;
 		case "spellblock":
 			variable = su.spellblock;
 			break;
 		case "movespeed":
 			variable = su.movespeed;
+			break;
+		case "flat":
+			variable = 1;
+			break;
+		case "cooldown":
+			int cRank = su.expectRank(su.level, slot) - 1;
+			if (cRank == 0){
+				cRank = 1;
+			}
+			variable = su.cooldownCalc(su.spells.getJSONObject(slot), cRank);
 			break;
 		default:
 			break;
@@ -102,14 +127,48 @@ public class AbilityVar {
 		if (perlevel > 0){
 			variable = variable * (base + perlevel * su.level);
 		}
+		if (rankCoeff.length == 5){
+			int ranker = su.expectRank(su.level, slot) - 1;
+			if (ranker == 0){
+				ranker = 1;
+			}
+			variable = variable * rankCoeff[ranker - 1];
+		}
 		
 		value = coeff * variable;
 		
 		return value;
 	}
 	
+	public AbilityVar(int c, int s, String v, double co, double cs, String st){
+		champ = c;
+		slot = s;
+		var = v;
+		coeff = co;
+		inCoeff = cs;
+		stat = st;
+	}
+	
+	public AbilityVar(int c, int s, String v, double[] co, String st){
+		champ = c;
+		slot = s;
+		var = v;
+		rankCoeff = co;
+		stat = st;
+		coeff = 1;
+		inCoeff = 1;
+	}
+	
 	public AbilityVar (int c, int s, String v, double co, String st, double b, double pl){
-		
+		champ = c;
+		slot = s;
+		var = v;
+		coeff = co;
+		stat = st;
+		base = b;
+		perlevel = pl;
+		rankCoeff = new double[4];
+		inCoeff = 1;
 	}
 	public AbilityVar (int c, int s, String v, double co, double[] ba){
 		champ = c;
@@ -118,5 +177,7 @@ public class AbilityVar {
 		coeff = co;
 		baseLevelArray = ba;
 		stat = "";
+		rankCoeff = new double[4];
+		inCoeff = 1;
 	}
 }
