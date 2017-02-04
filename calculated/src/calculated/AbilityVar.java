@@ -2,6 +2,8 @@ package calculated;
 
 import org.json.*;
 
+import java.math.*;
+
 public class AbilityVar {
 
 	int champ;
@@ -88,9 +90,20 @@ public class AbilityVar {
 		case "effect2":
 			variable = su.eCoeff(slot, 2);
 			break;
+		case "effect3":
+			variable = su.eCoeff(slot, 3);
+			break;
+		case "abilityaug":
+			variable = su.abilityAug;
+			break;
 		case "e1sd":
 			variable = su.eCoeff(slot, 1) * coeff;
 			variable += su.abilitypower * inCoeff;
+			variable = variable / coeff;
+			break;
+		case "e2bad":
+			variable = su.eCoeff(slot, 2) * coeff;
+			variable += su.attackdamage - su.baseScaledArray[2];
 			variable = variable / coeff;
 			break;
 		case "level":
@@ -101,14 +114,67 @@ public class AbilityVar {
 			variable += su.attackdamage * inCoeff;
 			variable = variable / coeff;
 			break;
+		case "e7ad":
+			variable = su.eCoeff(slot, 7) * coeff;
+			variable += su.attackdamage * inCoeff;
+			variable = variable / coeff;
+			break;
+		case "e1hp":
+			variable = su.eCoeff(slot, 1) * coeff;
+			variable += su.hp * inCoeff;
+			variable = variable / coeff;
+			break;
+		case "e1e4ad":
+			variable = su.eCoeff(slot, 1);
+			double help = su.eCoeff(slot, 4);
+			if (help == 0){
+				help = 3;
+			}
+			variable = (variable + (su.attackdamage - su.baseScaledArray[2]) * coeff) / help;
+			variable = variable / coeff;
+			break;
+		case: "e3ad":
+			variable = su.eCoeff(slot, 3) * coeff;
+			variable += su.attackdamage * inCoeff;
+			variable = variable / coeff;
+			break;
+		case "e6hp":
+			variable = su.eCoeff(slot, 6) * coeff;
+			variable += su.hp * inCoeff;
+			variable = variable / coeff;
+			break;
 		case "spellblock":
 			variable = su.spellblock;
 			break;
 		case "movespeed":
 			variable = su.movespeed;
 			break;
+		case "spfloor":
+			variable = Math.floor(su.abilitypower / 100);
+			if (inCoeff > 1){
+				variable = (variable * 7.5) + inCoeff;
+			}
+			break;
+		case "baseE1ap":
+			variable = su.eCoeff(slot, 1);
+			variable += su.abilitypower * coeff;
+			variable = variable / coeff;
+			break;
+		case "adap":
+			variable = su.attackdamage - su.baseScaledArray[2] + su.abilitypower;
+			break;
 		case "flat":
 			variable = 1;
+			break;
+		case "spd":
+			int speeder = su.expectRank(su.level, slot) - 1;
+			if (speeder == 0){
+				speeder = 1;
+			}
+			variable = baseLevelArray[su.level] + rankCoeff[speeder];
+			break;
+		case "baseplad":
+			variable = base + perlevel * su.level + inCoeff * su.attackdamage;
 			break;
 		case "cooldown":
 			int cRank = su.expectRank(su.level, slot) - 1;
@@ -124,10 +190,10 @@ public class AbilityVar {
 			variable = baseLevelArray[su.level - 1];
 		}
 		
-		if (perlevel > 0){
+		if (perlevel > 0 && inCoeff == 1){
 			variable = variable * (base + perlevel * su.level);
 		}
-		if (rankCoeff.length == 5){
+		if (rankCoeff.length == 5 && stat != "spd"){
 			int ranker = su.expectRank(su.level, slot) - 1;
 			if (ranker == 0){
 				ranker = 1;
@@ -140,6 +206,16 @@ public class AbilityVar {
 		return value;
 	}
 	
+	public AbilityVar(int c, int s, String v, double[] lvl, double[] co, String st){
+		champ = c;
+		slot = s;
+		var = v;
+		rankCoeff = co;
+		baseLevelArray = lvl;
+		inCoeff = 1;
+		stat = st;
+		coeff = 1;
+	}
 	public AbilityVar(int c, int s, String v, double co, double cs, String st){
 		champ = c;
 		slot = s;
@@ -147,6 +223,7 @@ public class AbilityVar {
 		coeff = co;
 		inCoeff = cs;
 		stat = st;
+		rankCoeff = new double[4];
 	}
 	
 	public AbilityVar(int c, int s, String v, double[] co, String st){
@@ -160,6 +237,7 @@ public class AbilityVar {
 	}
 	
 	public AbilityVar (int c, int s, String v, double co, String st, double b, double pl){
+		// for one ability whose damage is calculated by a level basis, no other stats
 		champ = c;
 		slot = s;
 		var = v;
@@ -169,6 +247,18 @@ public class AbilityVar {
 		perlevel = pl;
 		rankCoeff = new double[4];
 		inCoeff = 1;
+	}
+	public AbilityVar(int c, int s, String v, double co, double b, double pl, String st){
+		// for an ability that has a per level component, but also has another stat
+		champ = c;
+		slot = s;
+		var = v;
+		coeff = 1;
+		stat = st;
+		base = b;
+		perlevel = pl;
+		rankCoeff = new double[4];
+		inCoeff = co;
 	}
 	public AbilityVar (int c, int s, String v, double co, double[] ba){
 		champ = c;

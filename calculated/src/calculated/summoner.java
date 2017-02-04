@@ -41,6 +41,7 @@ public class summoner {
 	double[] baseScaledArray;
 	double summonerspellcd;
 	int level;
+	double abilityAug;
 	
 	public void placeItem(int iid, int slot){
 		itemArray[slot] = iid;
@@ -72,9 +73,26 @@ public class summoner {
 		// after item calculation
 		runePer();
 		masteryPer();
+		charAbil();
 		
 		// final attack speed
 		setAttackSpeed();
+	}
+	
+	private void charAbil() throws JSONException {
+		abilityAug = 0;
+		int ranker = 0;
+		switch(champId){
+		case 54:
+			ranker = expectRank(level, 1);
+			if (ranker > 0){
+				abilityAug = armor * .01 * eCoeff(1, ranker);
+				armor += abilityAug;
+			}
+			break;
+		default:
+			break;
+		}
 	}
 	
 	private void itemStats(ItemBank ib){
