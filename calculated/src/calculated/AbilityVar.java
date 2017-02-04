@@ -173,8 +173,16 @@ public class AbilityVar {
 			}
 			variable = baseLevelArray[su.level] + rankCoeff[speeder];
 			break;
+		case "cdr":
+			variable = 1 - su.cooldownreduction;
+			break;
 		case "baseplad":
 			variable = base + perlevel * su.level + inCoeff * su.attackdamage;
+			break;
+		case "e2badap":
+			variable = su.eCoeff(slot, 2);
+			variable = variable * ((su.attackdamage - su.baseScaledArray[2]) * coeff + su.abilitypower * inCoeff);
+			variable = variable / coeff;
 			break;
 		case "cooldown":
 			int cRank = su.expectRank(su.level, slot) - 1;

@@ -316,6 +316,32 @@ public class VariableInfo {
 		abilities.add(new AbilityVar(236, 1, aone, .9, "spelldamage"));
 		abilities.add(new AbilityVar(236, 3, aone, .1, "spelldamage"));
 		abilities.add(new AbilityVar(236, 3, aone, .2, "attackdamage"));
+		// Miss Fortune
+		abilities.add(new AbilityVar(21, 0, fone, .85, "attackdamage"));
+		abilities.add(new AbilityVar(21, 0, aone, .35, "spelldamage"));
+		abilities.add(new AbilityVar(21, 0, ftwo, 1, "attackdamage"));
+		abilities.add(new AbilityVar(21, 0, atwo, .5, "spelldamage"));
+		abilities.add(new AbilityVar(21, 1, ftwo, 2, "cdr"));
+		abilities.add(new AbilityVar(21, 2, aone, .8, "spelldamage"));
+		abilities.add(new AbilityVar(21, 3, fone, .35, "bonusattackdamage"));
+		abilities.add(new AbilityVar(21, 3, aone, .2, "spelldamage"));
+		abilities.add(new AbilityVar(21, 3, fthree, 120, "flat"));
+		abilities.add(new AbilityVar(21, 3, ftwo, .35, .2, "e2badap"));
+		// Jhin
+		double [] lotus = {28, 27, 26, 25, 24};
+		abilities.add(new AbilityVar(202, 0, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(202, 0, fone, 1, "e3ad"));
+		abilities.add(new AbilityVar(202, 1, aone, .5, "attackdamage"));
+		abilities.add(new AbilityVar(202, 2, aone, 1.2, "attackdamage"));
+		abilities.add(new AbilityVar(202, 2, atwo, 1, "spelldamage"));
+		abilities.add(new AbilityVar(202, 2, fone, lotus, "flat"));
+		abilities.add(new AbilityVar(202, 3, aone, .2, "attackdamage"));
+		abilities.add(new AbilityVar(202, 3, fone, 1, "effect2"));
+		abilities.add(new AbilityVar(202, 3, ftwo, 3.5, "effect1"));
+		abilities.add(new AbilityVar(202, 3, fthree, .7, "attackdamage"));
+		// Azir
+		abilities.add(new AbilityVar(268, 0, aone, .5, "spelldamage"));
+		abilities.add(new AbilityVar(268, 1, aone, .6, "spelldamage"));
 		
 		
 		
