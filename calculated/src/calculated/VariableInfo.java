@@ -17,6 +17,8 @@ public class VariableInfo {
 	String shyvwtwo;
 	String shyvwthree;
 	String kogult;
+	String azirw;
+	String eone;
 	ArrayList<AbilityVar> abilities;
 	
 	public VariableInfo () {
@@ -24,10 +26,12 @@ public class VariableInfo {
 		ftwo = "{{ f2 }}";
 		aone = "{{ a1 }}";
 		atwo = "{{ a2 }}";
+		eone = "{{ e1 }}";
 		fthree = "{{ f3 }}";
 		ffour = "{{ f4 }}";
 		ffive = "{{ f5 }}";
 		fsix = "{{ f6 }}";
+		azirw = "{{ maxammo }}"
 		shyvwone = "@Effect1Amount*0.25@";
 		shyvwtwo = "@CharBonusPhysical*0.25@";
 		shyvwthree = "@CharAbilityPower2*.25@";
@@ -340,8 +344,67 @@ public class VariableInfo {
 		abilities.add(new AbilityVar(202, 3, ftwo, 3.5, "effect1"));
 		abilities.add(new AbilityVar(202, 3, fthree, .7, "attackdamage"));
 		// Azir
+		double [] ssoldier = {50, 52, 54, 56, 58, 60, 63, 66, 70, 80, 90, 100, 110, 120, 130, 140, 155, 170};
+		double [] scd = {10, 9, 8, 7, 6};
 		abilities.add(new AbilityVar(268, 0, aone, .5, "spelldamage"));
 		abilities.add(new AbilityVar(268, 1, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(268, 1, ftwo, 1, ssoldier));
+		abilities.add(new AbilityVar(268, 1, azirw, 2, "flat"));
+		abilities.add(new AbilityVar(268, 1, fone, scd, "cdr"));
+		abilities.add(new AbilityVar(268, 2, aone, .4, "spelldamage"));
+		abilities.add(new AbilityVar(268, 3, aone, .6, "spelldamage"));
+		// Xerath
+		abilities.add(new AbilityVar(101, 0, aone, .75, "spelldamage"));
+		abilities.add(new AbilityVar(101, 1, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(101, 1, fone, 1.5, "effect1"));
+		abilities.add(new AbilityVar(101, 1, ftwo, .9, "spelldamage"));
+		abilities.add(new AbilityVar(101, 2, aone, .45, "spelldamage"));
+		abilities.add(new AbilityVar(101, 3, aone, .43, "spelldamage"));
+		// Vi
+		double [] punches = {14, 12.5, 11, 9.5, 8};
+		abilities.add(new AbilityVar(254, 0, aone, .8, "bonusattackdamage"));
+		abilities.add(new AbilityVar(254, 0, ftwo, .875, "effect1"));
+		abilities.add(new AbilityVar(254, 0, fone, 1.4, "bonusattackdamage"));
+		abilities.add(new AbilityVar(254, 0, eone, .5, "effect1"));
+		abilities.add(new AbilityVar(254, 1, fone, 35, "flat"));
+		abilities.add(new AbilityVar(254, 2, fthree, 1.15, "attackdamage"));
+		abilities.add(new AbilityVar(254, 2, aone, .7, "spelldamage"));
+		abilities.add(new AbilityVar(254, 2, fone, punches, "flat"));
+		abilities.add(new AbilityVar(254, 3, aone, 1.4, "bonusattackdamage"));
+		// Nocturne
+		abilities.add(new AbilityVar(56, 0, fone, .75, "bonusattackdamage"));
+		abilities.add(new AbilityVar(56, 2, aone, 1, "spelldamage"));
+		abilities.add(new AbilityVar(56, 3, fone, 1.2, "bonusattackdamage"));
+		// Karthus
+		abilities.add(new AbilityVar(30, 0, aone, .3, "spelldamage"));
+		abilities.add(new AbilityVar(30, 2, aone, .2, "spelldamage"));
+		abilities.add(new AbilityVar(30, 3, aone, .6, "spelldamage"));
+		// LeBlanc
+		double [] shadow = {160, 140, 120};
+		abilities.add(new AbilityVar(7, 0, aone, .5, "spelldamage"));
+		abilities.add(new AbilityVar(7, 1, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(7, 2, aone, .5, "spelldamage"));
+		abilities.add(new AbilityVar(7, 3, atwo, .6, "spelldamage"));
+		abilities.add(new AbilityVar(7, 3, aone, .4, "spelldamage"));
+		abilities.add(new AbilityVar(7, 3, ftwo, shadow, "cdr"));
+		abilities.add(new AbilityVar(7, 3, fone, .5, "spelldamage"));
+		// Janna
+		abilities.add(new AbilityVar(40, 0, aone, .35, "spelldamage"));
+		abilities.add(new AbilityVar(40, 0, atwo, .1, "spelldamage"));
+		abilities.add(new AbilityVar(40, 1, fone, .02, "spelldamage"));
+		abilities.add(new AbilityVar(40, 1, aone, .5, "spelldamage"));
+		abilities.add(new AbilityVar(40, 1, ftwo, .06, "spelldamage"));
+		abilities.add(new AbilityVar(40, 2, aone, .7, "spelldamage"));
+		abilities.add(new AbilityVar(40, 2, atwo, .1, "spelldamage"));
+		abilities.add(new AbilityVar(40, 3, aone, .5, "spelldamage"));
+		// Brand
+		abilities.add(new AbilityVar(63, 0, aone, .55, "spelldamage"));
+		abilities.add(new AbilityVar(63, 1, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(63, 2, aone, .35, "spelldamage"));
+		abilities.add(new AbilityVar(63, 3, aone, .25, "spelldamage"));
+		// Nasus
+		
+		
 		
 		
 		

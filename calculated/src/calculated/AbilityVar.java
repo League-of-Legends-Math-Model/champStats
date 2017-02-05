@@ -201,7 +201,7 @@ public class AbilityVar {
 		if (perlevel > 0 && inCoeff == 1){
 			variable = variable * (base + perlevel * su.level);
 		}
-		if (rankCoeff.length == 5 && stat != "spd"){
+		if (rankCoeff.length != 4 && stat != "spd"){
 			int ranker = su.expectRank(su.level, slot) - 1;
 			if (ranker == 0){
 				ranker = 1;
