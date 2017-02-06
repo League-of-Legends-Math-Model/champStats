@@ -106,12 +106,26 @@ public class AbilityVar {
 			variable += su.attackdamage - su.baseScaledArray[2];
 			variable = variable / coeff;
 			break;
+		case "e3bad":
+			variable = su.eCoeff(slot, 3);
+			variable += (su.attackdamage - su.baseScaledArray[2]) * coeff;
+			variable = variable / coeff;
+			break;
+		case "e3ap":
+			variable = su.eCoeff(slot, 3);
+			variable += su.abilitypower * coeff;
+			variable = variable / coeff;
+			break;
 		case "level":
 			variable = su.level;
 			break;
 		case "e1ad":
 			variable = su.eCoeff(slot, 1) * coeff;
 			variable += su.attackdamage * inCoeff;
+			variable = variable / coeff;
+			break;
+		case "level5floor":
+			variable = coeff + Math.floor(su.level - 1) * inCoeff;
 			variable = variable / coeff;
 			break;
 		case "e7ad":

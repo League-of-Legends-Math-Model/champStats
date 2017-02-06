@@ -402,7 +402,49 @@ public class VariableInfo {
 		abilities.add(new AbilityVar(63, 1, aone, .6, "spelldamage"));
 		abilities.add(new AbilityVar(63, 2, aone, .35, "spelldamage"));
 		abilities.add(new AbilityVar(63, 3, aone, .25, "spelldamage"));
-		// Nasus
+		// Nasus - fone = stacks
+		abilities.add(new AbilityVar(75, 0, atwo, 1, "attackdamage"));
+		abilities.add(new AbilityVar(75, 0, fone, 0, "flat"));
+		abilities.add(new AbilityVar(75, 2, atwo, .6, "spelldamage"));
+		abilities.add(new AbilityVar(75, 2, aone, .12, "spelldamage"));
+		abilities.add(new AbilityVar(75, 3, aone, .01, "spelldamage"));
+		// Ahri
+		abilities.add(new AbilityVar(103, 0, aone, .35, "spelldamage"));
+		abilities.add(new AbilityVar(103, 1, aone, .4, "spelldamage"));
+		abilities.add(new AbilityVar(103, 1, fone, 1.6, .64, "e1sd"));
+		abilities.add(new AbilityVar(103, 2, aone, .5, "spelldamage"));
+		abilities.add(new AbilityVar(103, 3, aone, .3, "spelldamage"));
+		// Jax
+		abilities.add(new AbilityVar(24, 0, fone, 1, "bonusattackdamage"));
+		abilities.add(new AbilityVar(24, 0, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(24, 1, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(24, 2, ftwo, .5, "bonusattackdamage"));
+		abilities.add(new AbilityVar(24, 3, aone, .7, "spelldamage"));
+		abilities.add(new AbilityVar(24, 3, ftwo, .5, "e3bad"));
+		abilities.add(new AbilityVar(24, 3, fone, .2, "e3ap"));
+		// Zed
+		abilities.add(new AbilityVar(238, 0, aone, .9, "bonusattackdamage"));
+		abilities.add(new AbilityVar(238, 0, atwo, .54, "bonusattackdamage"));
+		abilities.add(new AbilityVar(238, 2, aone, .8, "bonusattackdamage"));
+		abilities.add(new AbilityVar(238, 3, aone, 1, "attackdamage"));
+		abilities.add(new AbilityVar(238, 3, ftwo, 5, "flat"));
+		// Galio
+		abilities.add(new AbilityVar(3, 0, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(3, 1, aone, .3, "spelldamage"));
+		abilities.add(new AbilityVar(3, 2, aone, .5, "spelldamage"));
+		abilities.add(new AbilityVar(3, 3, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(3, 3, atwo, 1.08, "spelldamage"));
+		// Jayce issues: what about mercury cannon? concatenate the strings?
+		abilities.add(new AbilityVar(126, 0, aone, 1.2, "bonusattackdamage"));
+		abilities.add(new AbilityVar(126, 1, aone, 1, "spelldamage"));
+		abilities.add(new AbilityVar(126, 2, aone, 1, "bonusattackdamage"));
+		abilities.add(new AbilityVar(126, 3, fthree, 10, 5, "level5floor"));
+		// Kennen
+		abilities.add(new AbilityVar(85, 0, aone, .75, "spelldamage"));
+		abilities.add(new AbilityVar(85, 1, aone, .55, "spelldamage"));
+		abilities.add(new AbilityVar(85, 2, aone, .6, "spelldamage"));
+		abilities.add(new AbilityVar(85, 3, aone, .2, "spelldamage"));
+		// Talon
 		
 		
 		
