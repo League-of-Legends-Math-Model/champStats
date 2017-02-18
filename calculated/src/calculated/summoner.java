@@ -45,6 +45,7 @@ public class summoner {
 	
 	public void placeItem(int iid, int slot){
 		itemArray[slot] = iid;
+		rebuildStats();
 	}
 	
 	public void putCharacterData(JSONObject cD) throws JSONException {
