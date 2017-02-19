@@ -126,7 +126,7 @@ gold = []
 if matchlist['totalGames'] > 0:
     for i in range(0, len(matchlist['matches'])):
         matchIds.append(matchlist['matches'][i]['matchId'])
-        if i > 9:
+        if i > 8:
             break;
     
     for i in range(0, len(matchIds)):
@@ -243,8 +243,11 @@ if matchlist['totalGames'] > 0:
         itemUrl = "https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/"+str(itemLikelihood[i][0])+"?itemData=all&api_key=836619ee-c877-45d9-b718-ab0eea4ed172"
         response = requests.get(itemUrl)
         itemstuff = response.json()
+        try:
+            itemLikelihood[i].append(itemstuff['name'])
+        except:
+            pass
         
-        itemLikelihood[i].append(itemstuff['name'])
 
     wins = 0
     for i in range(0, len(matches)):
@@ -252,5 +255,25 @@ if matchlist['totalGames'] > 0:
             wins = wins + 1
     
     winrate = wins / len(matches)
+    tehKda = [0, 0, 0]
+    for i in range(0, len(kdas)):
+        for j in range(0, 3):
+            tehKda[j] = tehKda[j] + kdas[i][j]
     
+    for i in range(0, 3):
+        tehKda[i] = tehKda[i] / len(kdas)
         
+    kp = 0
+    
+    for i in range(0, len(killparticipation)):
+        kp = kp + killparticipation[i]
+    
+    kp / len(killparticipation)
+    
+    print(commonSkill)
+    print(itemLikelihood)
+    print("Winrate: " + str(winrate))
+    print("Average Kills: " + str(tehKda[0]))
+    print("Average Deaths: " + str(tehKda[1]))
+    print("Average Assists: " + str(tehKda[2]))
+    print("Average Kill Participation: " + str(kp))
